@@ -11,7 +11,7 @@ from thymio_msgs.msg import Led
 LONG_PRESS=8 #seconds
 UI_IDLE_TIME=5 #seconds
 
-interface='wlan0'
+
 
 class WifiUI(object):
 
@@ -135,7 +135,7 @@ class WifiUI(object):
 
     def init_configuration(self):
         self._configuration=None
-        self.interface=interface
+        self.interface='wlan0'
         self.configurations=[(None,None,False),('wlan0','192.168.168.1',True)]
 
         additional_interfaces=rospy.get_param("~wlan_interfaces",[])
