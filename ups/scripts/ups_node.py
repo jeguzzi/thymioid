@@ -19,7 +19,12 @@ class ups_state_listener:
         rospy.init_node('ups', anonymous=True)
         ac_pub = rospy.Publisher('ups/ac', Bool, queue_size=1)
         batt_pub = rospy.Publisher('ups/battery', Bool, queue_size=1)
-        wiringpi2.wiringPiSetup() 
+        # does not need root priviledge
+        # the pin have to be already exported
+        # for example with "gpio export <number> out"
+        wiringpi2.wiringPiSetupSys() 
+        # does need root priviledge
+        #wiringpi2.wiringPiSetup() 
         wiringpi2.pinMode(AC_OK,IN)
         wiringpi2.pinMode(BATT_OK,IN)
         rate = rospy.Rate(1)
