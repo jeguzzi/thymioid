@@ -11,10 +11,6 @@ from time import sleep
 import netifaces
 import gobject
 
-def on_buttons(evt):
-        print evt
-        print "buttons"
-
 BATT=2
 AC=0 
 LATCH=3

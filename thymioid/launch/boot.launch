@@ -1,0 +1,6 @@
+<launch>
+	<node name="ups" type="ups_node.py" pkg="ups"/>                                                               
+	<include file="$(find thymio_driver)/launch/base.launch" />  						      
+	<node name="ups_ward" type="ups_ward_node.py" pkg="thymioid" output="screen"/>
+	<node name="wifi_ui" type="wifi_node.py" pkg="thymioid" output="screen" required="true"/>
+</launch>
