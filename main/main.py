@@ -59,45 +59,67 @@ class MainLoop(object):
 
 
         def start_ap(self):
-                if True: #self.wifi!='ac':
-			print "bring wlan0 up"			
-			print subprocess.check_output(["sudo","ifup","wlan0"],shell=False)
-		time.sleep(0.5)
-		print 'got ip?',self.get_ip()
-		print 'start dhcp'
-                subprocess.check_output(["sudo","service","isc-dhcp-server","start"])
-		time.sleep(0.5)
-		print 'start hostapd'
-                self.hostapd=subprocess.Popen(["/usr/local/bin/hostapd","/etc/hostapd/hostapd.conf"],shell=False)
-		print 'done'
+                #iface start automatically dhcp server and hostapd (see /etc/network/interfaces)
+                print "Start AP on wlan0"			
+                print subprocess.check_output(["sudo","ifup","wlan0"],shell=False)
+		print 'Got ip:',self.get_ip()
+                #subprocess.check_output(["sudo","service","isc-dhcp-server","start"])
+		#print 'finally start hostapd'
+                #self.hostapd=subprocess.Popen(["/usr/local/bin/hostapd","/etc/hostapd/hostapd.conf"],shell=False)
+		#print 'done'
 
         def stop_ap(self):
-                if self.hostapd:
-                        self.hostapd.kill()
-                        print subprocess.check_output(["rm","/var/run/hostapd/wlan0"])
-			self.hostpapd=None 
-	        else:
-			print subprocess.check_output(["sudo","pkill","hostapd"])
-		print subprocess.check_output(["sudo","service","isc-dhcp-server","stop"])
+                print subprocess.check_output(["sudo","/etc/init.d/isc-dhcp-server","stop"])
+                print subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"])
+                #iface stop automatically dhcp server and hostapd (see /etc/network/interfaces)
+                #if self.hostapd:
+                #        self.hostapd.kill()
+                #        print subprocess.check_output(["rm","/var/run/hostapd/wlan0"])
+                #	 self.hostpapd=None 
+	        #else:
+		#	print subprocess.check_output(["sudo","pkill","hostapd"])
+		#print subprocess.check_output(["sudo","service","isc-dhcp-server","stop"])
+                pass
 
         def start_managed(self):
+                print "Connect to router on wlan0"
                 print subprocess.check_output(["sudo","ifup","wlan0=wlan_casa"])
+                print 'Got ip:',self.get_ip()
+
+
+        def start_wifi(self,name):
+                print "Connect wlan0 to",name
+                print subprocess.check_output(["sudo","ifup","wlan0="+name])
+                print 'Got ip:',self.get_ip()
+
 
         def stop_wifi(self):
                 print subprocess.check_output(["sudo","ifdown","wlan0"])
 
 
+        
 
         def set_wifi(self,value):
-                if self.configuration != -1:#0:
-			self.stop_wifi()
-                	time.sleep(0.5)
+                self.stop_wifi()
+                # why??
+                if self.configuration == 1:
+                        self.stop_ap()
+                
+                time.sleep(2)
+
+
+
+                #print 'dhcp: ',self.service_is_running('isc-dhcp-server')
+                #print 'hostapd: ',self.service_is_running('hostapd')
+
+                if value>0:
+                        self.start_wifi(self.wlan0[value])
 		if self.configuration == 1:
                         self.stop_ap()
-                if value is 1:
-                        self.start_ap()
-                elif value is 2:
-                        self.start_managed()
+                #if value is 1:
+                #        self.start_ap()
+                #elif value is 2:
+                #        self.start_managed()
                         
 
         @property
@@ -111,35 +133,31 @@ class MainLoop(object):
                         self.set_wifi(value)
                         self._configuration=value
                         
-                                
                 
         def get_ip(self):
                 try:
                         return netifaces.ifaddresses("wlan0").get(netifaces.AF_INET)[0].get('addr')
                 except Exception as e:
-                        print "Could not retrieve ip address:",e
+                        #print "Could not retrieve ip address:",e
                         return None
 
+        
+        def service_is_running(self,name):
+                status=subprocess.check_output(["/etc/init.d/"+name,"status"])
+                print status
+                print status.find('running')>=0
+                return status.find('running')>=0
+                        
 
         def check_ap(self):
-                if(not self.hostapd):
-                        print "no hostapd"
-                        return False
-                if(self.hostapd.poll()):
-                        print "hostapd is not running"
-                        return False
-                status=subprocess.check_output(["sudo","service","isc-dhcp-server","status"])
-                print "dhcp server status",status
-                if(status.find('running')<0):
-                        return False
-                return True
+                return self.service_is_running("isc-dhcp-server") and self.service_is_running("hostapd") 
 
         def check_wifi(self):
-                ip=self.get_ip()
-                print 'ip is',ip 
-                if(ip is None):
+                self.ip=self.get_ip()
+                print 'ip is',self.ip 
+                if(self.ip is None):
                         return ('off',True)
-                if(ip.find('192.168.168')>-1):
+                if(self.ip.find('192.168.168')>-1):
                         return ('ap',self.check_ap())
                 else:
                         return ('managed',True) 
@@ -222,8 +240,11 @@ class MainLoop(object):
                 
         def init_configuration(self):
                 self.number_of_configurations=3
+                self.wlan0=[None,'wlan0','wlan_casa']
                 i,s=self.check_wifi()
-                if i=='ac' and s:
+                print 'state:',i,s
+
+                if i=='ap' and s:
                         self._configuration=1
                 elif i=='managed':
                         self._configuration=2
@@ -231,6 +252,7 @@ class MainLoop(object):
                         self._configuration=0
                 
                 self.desired_configuration=self.configuration
+                print 'initial conf is',self.configuration
                 self.set_led_to_configuration()
                 self.changing_desired_configuration=False
 
