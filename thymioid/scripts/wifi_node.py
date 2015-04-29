@@ -5,7 +5,7 @@ import time
 from time import sleep
 import netifaces
 import rospy
-from std_msgs.msg import Bool, ColorRGBA
+from std_msgs.msg import Bool, ColorRGBA, Empty
 from thymio_driver.msg import Led
 
 LONG_PRESS=8 #seconds
@@ -21,13 +21,30 @@ class WifiUI(object):
 
         rospy.init_node('wifi_node', anonymous=True)
         self.led_publisher=rospy.Publisher('led',Led,queue_size=1)
-        rospy.Subscriber('buttons/center',Bool,self.on_button_center)
-        rospy.Subscriber('buttons/left',Bool,self.on_button_left)
-        rospy.Subscriber('buttons/forward',Bool,self.on_button_forward)
-        self.last_time_fwd_button_down=None
+        self.shutdown_thymio_pub=rospy.Publisher('shutdown',Empty,queue_size=1)
+
+        self.buttons=['left','center','right','forward','backward']
+        for b in self.buttons:
+            rospy.Subscriber('buttons/'+b,Bool,self.on_button(b))
+        self.last_time_button_down={}
+        
+        self.beat=True
+        rospy.Timer(rospy.Duration(1.0),self.send_beat)
+
         self.init_configuration()
         self.should_exit=False
-    
+
+
+    def send_beat(self,evt):
+        msg=Led()
+        msg.id=Led.BUTTONS
+        msg.values=4*[0.0]
+        if self.beat:
+            msg.values[2]=1.0
+            
+        self.led_publisher.publish(msg)
+        self.beat=not self.beat
+
         
     def run(self):
         r = rospy.Rate(1)
@@ -36,20 +53,53 @@ class WifiUI(object):
             self.check_long_press()
             r.sleep()
 
-    def on_long_press(self):
-        #the fwd button has been pressed for more than LONG_PRESS seconds
-        #exit
-        self.should_exit=True
+
+    def shutdown_odroid(self):
+        subprocess.call(['sudo','shutdown','now'])
+        #print "SHUTDOWN ODROID"
 
 
-    def on_button_forward(self,msg):
-        if msg.data:
-            self.last_time_fwd_button_down=rospy.Time.now()
-        else:
-            self.last_time_fwd_button_down=None
+    def on_long_press(self,button):
+        #the button has been pressed for more than LONG_PRESS seconds
+        if(button=='forward'):
+            #exit            
+            self.should_exit=True
+        if(button=='backward'):
+            #shutdown
+            #print "SHUTDOWN THYMIO"
+            #subprocess.call(['rostopic','pub','/shutdown','--once','std_msgs/Empty'])
+            self.shutdown_thymio_pub.publish(Empty())
+            self.shutdown_odroid()
+
+
+    def on_button(self,button):
+        def cb(msg):
+            if msg.data:
+                self.last_time_button_down[button]=rospy.Time.now()
+            else:
+                self.last_time_button_down[button]=None
+                self.button_up(button)
+        return cb
+
+
+
+    def button_up(self,button):
+        if(button=='left'):            
+            #change desired configuration            
+            if(not self.changing_desired_configuration):
+                self.desired_configuration=self.configuration
+                self.changing_desired_configuration=True
+            self.last_desired_input=rospy.Time.now()
+            self.desired_configuration=(self.desired_configuration+1) % len(self.configurations)
+            self.update_leds()
+
+        if(button=='center'):
+            #change configuration
+            if self.changing_desired_configuration:
+                self.changing_desired_configuration=False
+                self.configuration=self.desired_configuration
+                self.update_leds()
                 
-
-    
     @property
     def configuration(self):
         return self._configuration
@@ -62,27 +112,6 @@ class WifiUI(object):
             print 'set wifi',value
             self.set_wifi(value)
             self._configuration=value
-
-
-    def on_button_left(self,msg):
-        if(msg.data==False):
-            
-            #change desired configuration            
-            if(not self.changing_desired_configuration):
-                self.desired_configuration=self.configuration
-                self.changing_desired_configuration=True
-            self.last_desired_input=rospy.Time.now()
-            self.desired_configuration=(self.desired_configuration+1) % len(self.configurations)
-            self.update_leds()
-
-
-    def on_button_center(self,msg):
-        if(msg.data==False):
-            if self.changing_desired_configuration:
-                self.changing_desired_configuration=False
-                print 'H G',self.configuration,self.desired_configuration
-                self.configuration=self.desired_configuration
-                self.update_leds()
 
     def init_configuration(self):
         self._configuration=None
@@ -143,9 +172,7 @@ class WifiUI(object):
         
         self._configuration=0
 
-                
-
-
+        
 
     def stop_ap(self):
         #iface should start/stop automatically dhcp server and hostapd (see /etc/network/interfaces)
@@ -179,8 +206,9 @@ class WifiUI(object):
                         
  
     def check_long_press(self):
-        if self.last_time_fwd_button_down and (rospy.Time.now()-self.last_time_fwd_button_down).to_sec()>LONG_PRESS:
-            self.on_long_press()
+        for b in self.buttons:
+            if self.last_time_button_down.get(b,None) and (rospy.Time.now()-self.last_time_button_down.get(b)).to_sec()>LONG_PRESS:
+                self.on_long_press(b)
 
     def check_desired_configuration_timeout(self):
         if self.changing_desired_configuration:

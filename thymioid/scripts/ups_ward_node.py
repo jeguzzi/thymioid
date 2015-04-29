@@ -42,10 +42,10 @@ class UpsWard(object):
         self.update()
 
     def stop_alarm(self):
-        self.alarm_publisher(False)
+        self.alarm_publisher.publish(False)
 
     def start_alarm(self):
-        self.alarm_publisher(True)
+        self.alarm_publisher.publish(True)
 
     def set_color(self,color):
         for p in self.led_publishers:
