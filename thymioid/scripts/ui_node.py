@@ -34,6 +34,14 @@ class WifiUI(object):
         self.init_configuration()
         self.should_exit=False
 
+        rospy.on_shutdown(self.on_shutdown)
+
+    def on_shutdown(self):
+        msg=Led()
+        msg.id=Led.CIRCLE
+        msg.values=8*[0.0]
+        self.led_publisher.publish(msg)
+
 
     def send_beat(self,evt):
         msg=Led()
@@ -52,7 +60,7 @@ class WifiUI(object):
             self.check_desired_configuration_timeout()
             self.check_long_press()
             r.sleep()
-
+        
 
     def shutdown_odroid(self):
         subprocess.call(['sudo','shutdown','now'])
@@ -64,6 +72,12 @@ class WifiUI(object):
         if(button=='forward'):
             #exit            
             self.should_exit=True
+            self.on_shutdown()
+            
+            try:
+                subprocess.call(['sudo','service','thymioid','stop'])
+            except Exception as e:
+                rospy.logerr(e)
         if(button=='backward'):
             #shutdown
             #print "SHUTDOWN THYMIO"
@@ -116,7 +130,7 @@ class WifiUI(object):
     def init_configuration(self):
         self._configuration=None
         self.interface='wlan0'
-        self.configurations=[('off',None,None,False),('ac','wlan0','192.168.168.1',True),('casa','wlan_casa','192.168.1.',False)]
+        self.configurations=[('off',None,None,False),('ac','wlan0','192.168.168.1',True),('lab','drone_wifi','192.168.201.',False),('home','wlan_casa','192.168.1.',False)]
 
 
         self.set_configuration_from_network()
@@ -138,12 +152,16 @@ class WifiUI(object):
 
             
     def service_is_running(self,name):
-        status=subprocess.check_output(["/etc/init.d/"+name,"status"])
-        return status.find('running')>=0
-                        
+        try:
+            status=subprocess.check_output(["/etc/init.d/"+name,"status"])
+            return status.find('running')>=0
+        except Exception as e:
+            rospy.logerr("service is running, got exception %s" % e)
+            return False
 
     def check_ap(self):
-        return self.service_is_running("isc-dhcp-server") and self.service_is_running("hostapd") 
+        return self.service_is_running("hostapd") 
+        #return self.service_is_running("dnsmasq") and self.service_is_running("hostapd") 
 
 
     def set_configuration_from_network(self):
@@ -176,9 +194,13 @@ class WifiUI(object):
 
     def stop_ap(self):
         #iface should start/stop automatically dhcp server and hostapd (see /etc/network/interfaces)
-        print subprocess.check_output(["sudo","/etc/init.d/isc-dhcp-server","stop"])
-        print subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"])
 
+        try:
+            print subprocess.check_output(["sudo","/etc/init.d/dnsmasq","stop"])
+            #print subprocess.check_output(["sudo","service","isc-dhcp-server","stop"])
+            print subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"])
+        except Exception as e:
+            rospy.logerr("While stopping dhcpd and hostpad, got exception %s" %e)
 
     def start_wifi(self,name):
         rospy.loginfo("Connect %s with iface %s" % (self.interface,name))
