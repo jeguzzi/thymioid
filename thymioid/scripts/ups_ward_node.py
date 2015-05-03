@@ -29,7 +29,12 @@ class UpsWard(object):
         self.ups_color['battery']=ColorRGBA(1.0,1.0,0.0,0.0)
         self.ups_color['reserve']=ColorRGBA(1.0,0.0,0.0,0.0)
 
+        rospy.on_shutdown(self.on_shutdown)
 
+
+    def on_shutdown(self):
+        rospy.loginfo("shutdown ups_ward")
+        self.set_color(ColorRGBA(0.0,0.0,0.0,0.0))
 
     def set_ups_color(self):
         self.set_color(self.ups_color[self.ups_state])
@@ -60,11 +65,11 @@ class UpsWard(object):
             new_state='reserve'
             
         if self.ups_state != new_state:
-            if self.ups_state=='reserve':
-                self.stop_alarm()
+            #if self.ups_state=='reserve':
+                #self.stop_alarm()
             self.ups_state=new_state
-            if(self.ups_state=='reserve'):
-                self.start_alarm()
+            #if(self.ups_state=='reserve'):
+                #self.start_alarm()
             self.set_ups_color()
     
 if __name__ == '__main__':
