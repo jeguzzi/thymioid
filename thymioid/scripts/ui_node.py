@@ -6,7 +6,7 @@ from time import sleep
 import netifaces
 import rospy
 from std_msgs.msg import Bool, ColorRGBA, Empty
-from thymio_driver.msg import Led
+from thymio_msgs.msg import Led
 
 LONG_PRESS=8 #seconds
 UI_IDLE_TIME=5 #seconds
