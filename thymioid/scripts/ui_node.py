@@ -27,7 +27,7 @@ class WifiUI(object):
         for b in self.buttons:
             rospy.Subscriber('buttons/'+b,Bool,self.on_button(b))
         self.last_time_button_down={}
-        
+
         self.beat=True
         rospy.Timer(rospy.Duration(1.0),self.send_beat)
 
@@ -49,18 +49,18 @@ class WifiUI(object):
         msg.values=4*[0.0]
         if self.beat:
             msg.values[2]=1.0
-            
+
         self.led_publisher.publish(msg)
         self.beat=not self.beat
 
-        
+
     def run(self):
         r = rospy.Rate(1)
         while not self.should_exit and not rospy.is_shutdown():
             self.check_desired_configuration_timeout()
             self.check_long_press()
             r.sleep()
-        
+
 
     def shutdown_odroid(self):
         subprocess.call(['sudo','shutdown','now'])
@@ -70,10 +70,10 @@ class WifiUI(object):
     def on_long_press(self,button):
         #the button has been pressed for more than LONG_PRESS seconds
         if(button=='forward'):
-            #exit            
+            #exit
             self.should_exit=True
             self.on_shutdown()
-            
+
             try:
                 subprocess.call(['sudo','service','thymioid','stop'])
             except Exception as e:
@@ -98,8 +98,8 @@ class WifiUI(object):
 
 
     def button_up(self,button):
-        if(button=='left'):            
-            #change desired configuration            
+        if(button=='left'):
+            #change desired configuration
             if(not self.changing_desired_configuration):
                 self.desired_configuration=self.configuration
                 self.changing_desired_configuration=True
@@ -113,7 +113,7 @@ class WifiUI(object):
                 self.changing_desired_configuration=False
                 self.configuration=self.desired_configuration
                 self.update_leds()
-                
+
     @property
     def configuration(self):
         return self._configuration
@@ -130,7 +130,13 @@ class WifiUI(object):
     def init_configuration(self):
         self._configuration=None
         self.interface='wlan0'
-        self.configurations=[('off',None,None,False),('ac','wlan0','192.168.168.1',True),('lab','drone_wifi','192.168.201.',False),('home','wlan_casa','192.168.1.',False)]
+        self.configurations=[(None,None,False),('wlan0','192.168.168.1',True)]
+
+        additional_interfaces=rospy.get_param("~wlan_interfaces",[])
+
+        for interface in additional_interfaces:
+            config=(interface.get('name'),interface.get('ip',''),interface.get('is_ap',False))
+            self.configurations.append(config)
 
 
         self.set_configuration_from_network()
@@ -150,7 +156,7 @@ class WifiUI(object):
             #print "Could not retrieve ip address:",e
             return None
 
-            
+
     def service_is_running(self,name):
         try:
             status=subprocess.check_output(["/etc/init.d/"+name,"status"])
@@ -160,8 +166,8 @@ class WifiUI(object):
             return False
 
     def check_ap(self):
-        return self.service_is_running("hostapd") 
-        #return self.service_is_running("dnsmasq") and self.service_is_running("hostapd") 
+        return self.service_is_running("hostapd")
+        #return self.service_is_running("dnsmasq") and self.service_is_running("hostapd")
 
 
     def set_configuration_from_network(self):
@@ -171,9 +177,9 @@ class WifiUI(object):
             self._configuration=0
             return
 
-        for i,c in enumerate(self.configurations): 
-            name,iface,addr,is_ap=c
-            
+        for i,c in enumerate(self.configurations):
+            iface,addr,is_ap=c
+
             if ip and not addr:
                 continue
 
@@ -181,16 +187,16 @@ class WifiUI(object):
                 continue
 
 
-            #hardcoded: 0 is down config!                
+            #hardcoded: 0 is down config!
             if is_ap and not self.check_ap():
                 self._configuration=0
             else:
                 self._configuration=i
             return
-        
+
         self._configuration=0
 
-        
+
 
     def stop_ap(self):
         #iface should start/stop automatically dhcp server and hostapd (see /etc/network/interfaces)
@@ -206,27 +212,27 @@ class WifiUI(object):
         rospy.loginfo("Connect %s with iface %s" % (self.interface,name))
         print subprocess.check_output(["sudo","ifup",self.interface+"="+name])
         rospy.loginfo('Got ip %s' % self.get_network_ip())
-                
+
     def stop_wifi(self):
         rospy.loginfo("Put down %s" % self.interface)
         print subprocess.check_output(["sudo","ifdown","wlan0"])
 
     def set_wifi(self,value):
-        _,new_iface,_,new_is_ap=self.configurations[value]
-        _,iface,_,is_ap=self.configurations[self.configuration]
+        new_iface,_,new_is_ap=self.configurations[value]
+        iface,_,is_ap=self.configurations[self.configuration]
         #print iface,'->',new_iface
         #print is_ap,'->',new_is_ap
         self.stop_wifi()
         # not sure why this is needed?
         if not new_is_ap:
             self.stop_ap()
-                
+
         time.sleep(2)
 
         if new_iface:
             self.start_wifi(new_iface)
-                        
- 
+
+
     def check_long_press(self):
         for b in self.buttons:
             if self.last_time_button_down.get(b,None) and (rospy.Time.now()-self.last_time_button_down.get(b)).to_sec()>LONG_PRESS:
@@ -248,10 +254,9 @@ class WifiUI(object):
             msg.values[self.configuration % 8]=1.0
 
         self.led_publisher.publish(msg)
-            
+
 
 
 if __name__ == '__main__':
     ui=WifiUI()
     ui.run()
-    
