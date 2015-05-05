@@ -7,6 +7,7 @@ project(thymioid)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  thymio_msgs
 )
 
 ## System dependencies are found with CMake's conventions

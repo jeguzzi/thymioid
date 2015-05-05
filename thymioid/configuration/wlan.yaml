@@ -1,0 +1,4 @@
+wlan_interfaces:
+  - name: 'drone_wifi'
+    ip: '192.168.201.'
+    is_ap: False
