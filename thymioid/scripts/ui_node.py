@@ -123,9 +123,13 @@ class WifiUI(object):
         if value<0 or value >=len(self.configurations):
             return
         if(value!=self._configuration):
-            print 'set wifi',value
-            self.set_wifi(value)
-            self._configuration=value
+            rospy.loginfo('set wifi to %d' % value)
+            success=self.set_wifi(value)
+            if(success):
+                self._configuration=value
+            else:
+                self.stop_wifi()
+                self._configuration=0
 
     def init_configuration(self):
         self._configuration=None
@@ -139,7 +143,7 @@ class WifiUI(object):
             self.configurations.append(config)
 
 
-        self.set_configuration_from_network()
+        self._configuration=self.read_configuration_from_network()
 
         self.desired_configuration=self.configuration
         rospy.loginfo('initial conf is %d' % self.configuration)
@@ -170,12 +174,11 @@ class WifiUI(object):
         #return self.service_is_running("dnsmasq") and self.service_is_running("hostapd")
 
 
-    def set_configuration_from_network(self):
+    def read_configuration_from_network(self):
         ip=self.get_network_ip()
 
         if not ip:
-            self._configuration=0
-            return
+            return 0
 
         for i,c in enumerate(self.configurations):
             iface,addr,is_ap=c
@@ -189,12 +192,12 @@ class WifiUI(object):
 
             #hardcoded: 0 is down config!
             if is_ap and not self.check_ap():
-                self._configuration=0
+                return 0
             else:
-                self._configuration=i
+                return i
             return
 
-        self._configuration=0
+         return 0
 
 
 
@@ -202,20 +205,31 @@ class WifiUI(object):
         #iface should start/stop automatically dhcp server and hostapd (see /etc/network/interfaces)
 
         try:
-            print subprocess.check_output(["sudo","/etc/init.d/dnsmasq","stop"])
+            rospy.loginfo(subprocess.check_output(["sudo","/etc/init.d/dnsmasq","stop"]))
             #print subprocess.check_output(["sudo","service","isc-dhcp-server","stop"])
-            print subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"])
+            rospy.loginfo(subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"]))
         except Exception as e:
             rospy.logerr("While stopping dhcpd and hostpad, got exception %s" %e)
 
     def start_wifi(self,name):
         rospy.loginfo("Connect %s with iface %s" % (self.interface,name))
-        print subprocess.check_output(["sudo","ifup",self.interface+"="+name])
-        rospy.loginfo('Got ip %s' % self.get_network_ip())
+        #timeout set in /etc/dhcp/dhclient.conf to 60 seconds
+        try:
+            rospy.loginfo(subprocess.check_output(["sudo","ifup",self.interface+"="+name]))
+            rospy.loginfo('Got ip %s' % self.get_network_ip())
+            return True
+
+        except Exception as e:
+            rospy.logerr(e)
+            return False
+
+
+
+
 
     def stop_wifi(self):
         rospy.loginfo("Put down %s" % self.interface)
-        print subprocess.check_output(["sudo","ifdown","wlan0"])
+        rospy.loginfo(subprocess.check_output(["sudo","ifdown","wlan0"]))
 
     def set_wifi(self,value):
         new_iface,_,new_is_ap=self.configurations[value]
@@ -230,7 +244,13 @@ class WifiUI(object):
         time.sleep(2)
 
         if new_iface:
-            self.start_wifi(new_iface)
+            success=self.start_wifi(new_iface)
+            if(success and new_value==self.read_configuration_from_network()):
+                return True
+            else:
+                return False
+
+        return True
 
 
     def check_long_press(self):
