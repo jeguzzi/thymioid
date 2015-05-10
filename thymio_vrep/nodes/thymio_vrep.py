@@ -8,7 +8,7 @@ from struct import *
 
 
 in_topics=["set_speed","set_led_top","set_led_bottom_left","set_led_bottom_right"]
-out_topics=["proximity","ground","imu","odometry"]
+out_topics=["proximity","ground","accelerometer","odometry"]
 vrep_ns="/vrep/"
 aseba_ns="/aseba/events/"
 
