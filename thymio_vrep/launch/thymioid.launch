@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find thymio_vrep)/launch/base.launch" />		   
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thymioid)/models/thymioid.urdf.xacro'" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" />
+  <include file="$(find thymio_vrep)/launch/ar_track_vrep.launch" />
+  <node name="teleop" pkg="thymio_navigation" type="remote_to_twist.py" />
+  <node name="keyboard" pkg="keyboard" type="keyboard" />
+</launch>
+

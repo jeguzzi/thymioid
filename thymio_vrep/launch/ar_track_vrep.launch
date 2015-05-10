@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="marker_size" default="4" />
+	<arg name="max_new_marker_error" default="0.08" />
+	<arg name="max_track_error" default="0.2" />
+
+	<arg name="cam_image_topic" default="camera/image_raw" />
+	<arg name="cam_info_topic" default="camera/camera_info" />		
+	<arg name="output_frame" default="camera_link" />
+	<arg name="bundle_files" default="$(find thymio_vrep)/bundles/multimarker_0.xml 
+$(find thymio_vrep)/bundles/multimarker_1.xml 
+$(find thymio_vrep)/bundles/multimarker_2.xml 
+$(find thymio_vrep)/bundles/multimarker_3.xml 
+$(find thymio_vrep)/bundles/multimarker_4.xml 
+$(find thymio_vrep)/bundles/multimarker_5.xml 
+$(find thymio_vrep)/bundles/multimarker_6.xml 
+$(find thymio_vrep)/bundles/multimarker_7.xml 
+$(find thymio_vrep)/bundles/multimarker_8.xml 
+$(find thymio_vrep)/bundles/multimarker_9.xml 
+$(find thymio_vrep)/bundles/multimarker_10.xml 
+$(find thymio_vrep)/bundles/multimarker_11.xml 
+$(find thymio_vrep)/bundles/multimarker_12.xml 
+$(find thymio_vrep)/bundles/multimarker_13.xml 
+$(find thymio_vrep)/bundles/multimarker_14.xml 
+$(find thymio_vrep)/bundles/multimarker_15.xml 
+$(find thymio_vrep)/bundles/multimarker_16.xml 
+$(find thymio_vrep)/bundles/multimarker_17.xml 
+$(find thymio_vrep)/bundles/multimarker_18.xml 
+$(find thymio_vrep)/bundles/multimarker_19.xml" />
+
+	<node name="ar_track_alvar" pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" respawn="false" output="screen" args="$(arg marker_size) $(arg max_new_marker_error) $(arg max_track_error) $(arg cam_image_topic) $(arg cam_info_topic) $(arg output_frame) $(arg bundle_files)" />
+</launch>

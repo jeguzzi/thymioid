@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
+    <multimarker markers='6'>
+        <marker index='90' status='1'> 
+            <corner x='-2.0' y='-2.0' z='0'/> 
+            <corner x='2.0' y='-2.0' z='0'/> 
+            <corner x='2.0' y='2.0' z='0'/> 
+            <corner x='-2.0' y='2.0' z='0'/>
+        </marker>
+        <marker index='91' status='1'> 
+            <corner x='2.5' y='-2.0' z='-0.5'/> 
+            <corner x='2.5' y='-2.0' z='-4.5'/> 
+            <corner x='2.5' y='2.0' z='-4.5'/> 
+            <corner x='2.5' y='2.0' z='-0.5'/>
+        </marker>
+        <marker index='92' status='1'> 
+            <corner x='2.0' y='-2.0' z='-5'/> 
+            <corner x='-2.0' y='-2.0' z='-5'/> 
+            <corner x='-2.0' y='2.0' z='-5'/> 
+            <corner x='2.0' y='2.0' z='-5'/>
+        </marker>
+        <marker index='93' status='1'> 
+            <corner x='-2.5' y='-2.0' z='-4.5'/> 
+            <corner x='-2.5' y='-2.0' z='-0.5'/> 
+            <corner x='-2.5' y='2.0' z='-0.5'/> 
+            <corner x='-2.5' y='2.0' z='-4.5'/>
+        </marker>
+        <marker index='94' status='1'> 
+            <corner x='-2.0' y='-2.5' z='-4.5'/> 
+            <corner x='2.0' y='-2.5' z='-4.5'/> 
+            <corner x='2.0' y='-2.5' z='-0.5'/> 
+            <corner x='-2.0' y='-2.5' z='-0.5'/>
+        </marker>
+        <marker index='95' status='1'> 
+            <corner x='-2.0' y='2.5' z='-0.5'/> 
+            <corner x='2.0' y='2.5' z='-0.5'/> 
+            <corner x='2.0' y='2.5' z='-4.5'/> 
+            <corner x='-2.0' y='2.5' z='-4.5'/>
+        </marker>
+    </multimarker>
