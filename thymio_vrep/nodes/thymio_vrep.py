@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import rospy
-from asebaros.msg import AsebaEvent
-from asebaros.srv import LoadScripts,LoadScriptsResponse
+from asebaros_msgs.msg import AsebaEvent
+from asebaros_msgs.srv import LoadScripts,LoadScriptsResponse
 from std_msgs.msg import String
 from struct import *
 

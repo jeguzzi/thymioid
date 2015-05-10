@@ -3,7 +3,7 @@ project(thymio_vrep)
 
 find_package(catkin REQUIRED COMPONENTS
 	rospy
-	asebaros
+	asebaros_msgs
 	std_msgs
 	rosgraph_msgs
 	#vrep_common
@@ -24,7 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 ###################################
 
 catkin_package(
-  CATKIN_DEPENDS rospy asebaros std_msgs message_runtime  rosgraph_msgs #vrep_common
+  CATKIN_DEPENDS rospy asebaros_msgs std_msgs message_runtime  rosgraph_msgs #vrep_common
 )
 
 ###########
