@@ -195,9 +195,8 @@ class WifiUI(object):
                 return 0
             else:
                 return i
-            return
-
-         return 0
+                
+        return 0
 
 
 
@@ -245,7 +244,7 @@ class WifiUI(object):
 
         if new_iface:
             success=self.start_wifi(new_iface)
-            if(success and new_value==self.read_configuration_from_network()):
+            if(success and value==self.read_configuration_from_network()):
                 return True
             else:
                 return False

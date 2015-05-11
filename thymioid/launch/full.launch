@@ -3,6 +3,6 @@
   <node name="ups" type="ups_node.py" pkg="ups"/>					     
   <include file="$(find thymio_driver)/launch/base.launch" />	
   <include file="$(find thymioid)/launch/camera.launch" />     
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thymio_driver)/models/thymioid.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thymioid)/models/thymioid.urdf.xacro'" />
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" />
 </launch>

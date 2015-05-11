@@ -41,7 +41,7 @@
   <link name="camera_link">
     <visual>
       <geometry>
-	<box size="0.016 0.02 0.01"/>
+	<box size="0.02 0.01 0.016"/>
       </geometry>
       <material name="Grey">
 	<color rgba="0.1 0.1 0.1 1.0"/>
@@ -68,7 +68,7 @@
   </joint>
 
   <joint name="camera_frame_joint" type="fixed">
-    <origin xyz="0.0 0 0" rpy="0 0 0"/>
+    <origin xyz="0.0 0 0" rpy="-1.5708 0 -1.5708"/>
     <parent link="camera_body_link"/>
     <child link="camera_link"/>
   </joint>
