@@ -62,7 +62,7 @@
   </joint>
   
   <joint name="camera_body_support_joint" type="fixed">
-    <origin xyz="0.015 0 0" rpy="0 0 0"/>
+    <origin xyz="0.015 0 0" rpy="0 0.2618 0"/>
     <parent link="camera_support_link"/>
     <child link="camera_body_link"/>
   </joint>
