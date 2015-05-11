@@ -11,6 +11,8 @@ from thymio_msgs.msg import Led
 LONG_PRESS=8 #seconds
 UI_IDLE_TIME=5 #seconds
 
+interface='wlan0'
+
 class WifiUI(object):
 
     def __init__(self):
@@ -133,7 +135,7 @@ class WifiUI(object):
 
     def init_configuration(self):
         self._configuration=None
-        self.interface='wlan0'
+        self.interface=interface
         self.configurations=[(None,None,False),('wlan0','192.168.168.1',True)]
 
         additional_interfaces=rospy.get_param("~wlan_interfaces",[])
@@ -176,6 +178,7 @@ class WifiUI(object):
 
     def read_configuration_from_network(self):
         ip=self.get_network_ip()
+        #hardcoded: 0 is down config!
 
         if not ip:
             return 0
@@ -189,8 +192,6 @@ class WifiUI(object):
             if ip.find(addr)<0:
                 continue
 
-
-            #hardcoded: 0 is down config!
             if is_ap and not self.check_ap():
                 return 0
             else:
@@ -206,10 +207,9 @@ class WifiUI(object):
 
         try:
             rospy.loginfo(subprocess.check_output(["sudo","/etc/init.d/dnsmasq","stop"]))
-            #print subprocess.check_output(["sudo","service","isc-dhcp-server","stop"])
             rospy.loginfo(subprocess.check_output(["sudo","/etc/init.d/hostapd","stop"]))
         except Exception as e:
-            rospy.logerr("While stopping dhcpd and hostpad, got exception %s" %e)
+            rospy.logerr("While stopping dnsmaq and hostpad, got exception %s" %e)
 
     def start_wifi(self,name):
         rospy.loginfo("Connect %s with iface %s" % (self.interface,name))
@@ -218,18 +218,13 @@ class WifiUI(object):
             rospy.loginfo(subprocess.check_output(["sudo","ifup",self.interface+"="+name]))
             rospy.loginfo('Got ip %s' % self.get_network_ip())
             return True
-
         except Exception as e:
             rospy.logerr(e)
             return False
 
-
-
-
-
     def stop_wifi(self):
         rospy.loginfo("Put down %s" % self.interface)
-        rospy.loginfo(subprocess.check_output(["sudo","ifdown","wlan0"]))
+        rospy.loginfo(subprocess.check_output(["sudo","ifdown",self.interface]))
 
     def set_wifi(self,value):
         new_iface,_,new_is_ap=self.configurations[value]
