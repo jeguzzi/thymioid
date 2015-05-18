@@ -48,7 +48,7 @@ Running the simulation
   sh <your-vrep-folder>/vrep.sh
   ```
 
-4. open the scene
+4. open the scene located in `<your_catkin_ws>/src/thymioid/usi_lab_4/scene/lab4.skeleton`
 
 5. start the simulation
 
