@@ -56,7 +56,7 @@ Running the simulation
 6. launch the Thymio controller
 
   ```bash
-  roslaunch usi_lab_4 skelethon.launch
+  roslaunch usi_lab_4 skeleton.launch
   ```
 
 7. (optional) launch rviz to visualize the information the robot is collecting
