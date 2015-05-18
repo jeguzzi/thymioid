@@ -98,29 +98,81 @@ The most important topics that carry sensing informations are
 Each cube is covered by unique visual markers that are detectable by the robot using its on-board
 camera and the ROS package [`ar_track_alvar`](http://wiki.ros.org/ar_track_alvar), which publishes the id and pose of one of the faces of the cube based on the xml descriptions contained in /bundles. Each pose is given with respect to the camera frame denoted as `camera_link`. Moreover, for every detected cube, the node publishes a [tf](http://wiki.ros.org/tf) coordinates frame. tf is a ROS package that takes care of transforming between the various coordinate frame.
 
-To get the range and bearing of the center of the cube with respect to the robot center, you should first use tf to get the pose in the robot frame `base_link`, as explained [here](http://wiki.ros.org/tf/Overview/Transformations) and [here](http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF). For example, using C++:
+To get the range and bearing of the center of the cube with respect to the robot center, you should first use tf to get the pose in the robot frame `base_link`, as explained [here](http://wiki.ros.org/tf/Overview/Transformations) and [here](http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF). For example, using C++, the following ROS node print the polar coordinates of recent markers:
 
 ```c++
-    tf::TransformListener listener(ros::Duration(10));
-    tf::Point positionInRobotFrame(geometry_msgs::PoseStamped face_pose_in_camera_frame)
+/**
+ * @author Jerome Guzzi - <jerome@idsia.ch>
+ */
+
+#include <ros/ros.h>
+#include <tf/tf.h>
+#include <tf/transform_listener.h>
+#include <ar_track_alvar_msgs/AlvarMarkers.h>
+#include <ar_track_alvar_msgs/AlvarMarker.h>
+
+#define CUBE_HALF_SIZE 0.025
+
+class PoseNode
+{
+  ros::Subscriber pose_sub_;
+  ros::NodeHandle nh_;
+  tf::TransformListener listener;
+public:
+
+  PoseNode()
+    :listener(ros::Duration(10))
+  {
+    pose_sub_ = nh_.subscribe("ar_pose_marker", 1, &PoseNode::updatePose, this);
+}
+
+  tf::Point positionInRobotFrame(geometry_msgs::PoseStamped face_pose_in_camera_frame)
     {
         geometry_msgs::PoseStamped cube_pose_in_robot_frame;
         geometry_msgs::PoseStamped cube_pose_in_camera_frame=face_pose_in_camera_frame;
-        #move from the face center to the center of the cube.
-        #The z-axis of the marker frame points outwards the face.
+        //move from the face center to the center of the cube.
+        //The z-axis of the marker frame points outwards the face.
         cube_pose_in_camera_frame.pose.position.z-=CUBE_HALF_SIZE;
         try{
             listener.transformPose("base_link",cube_pose_in_camera_frame,cube_pose_in_robot_frame);
-            return tf::Point(cube_pose_in_robot_frame.pose.point.x,
+            return tf::Point(cube_pose_in_robot_frame.pose.position.x,
                              cube_pose_in_robot_frame.pose.position.y,
                              cube_pose_in_robot_frame.pose.position.z);
         }
         catch(tf::TransformException& ex){
-            ROS_ERROR("Received an exception trying to transform a point from \"%s\" to \"base_link\": %s",
-                face_pose_in_camera_frame.header.frame_id.c_str(),  ex.what());
-            return positionInWorldFrame;
+            ROS_ERROR("Received an exception trying to transform a point from \"%s\" to \"base_link\": %s",                face_pose_in_camera_frame.header.frame_id.c_str(),  ex.what());
+            return tf::Point(0,0,0);
         }
     }
+
+
+  void updatePose(const ar_track_alvar_msgs::AlvarMarkersConstPtr& msg)
+  {
+    std::vector<ar_track_alvar_msgs::AlvarMarker> markers=msg->markers;
+    for(int i=0;i<markers.size();i++)
+      {
+	ar_track_alvar_msgs::AlvarMarker marker=markers[i];
+	int id=marker.id;
+	geometry_msgs::PoseStamped pose=marker.pose;
+	pose.header.frame_id=marker.header.frame_id;
+	tf::Point p=positionInRobotFrame(pose);
+	printf("Cube %d is located at (%.2f %.2f) in the robot frame\n",id,p.x(),p.y());
+	double beta=atan2(p.y(),p.x());
+	double rho=sqrt(p.x()*p.x() +p.y()*p.y());
+	printf("i.e. at rho %.2f and beta %.2f\n",rho,beta);
+      }
+
+}
+};
+
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "pose_node");
+  PoseNode ic;
+  ros::spin();
+  return 0;
+}
 ```
 
 
