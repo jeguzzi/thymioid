@@ -9,6 +9,7 @@ Installation
   ```bash
   sudo apt-get install ros-indigo-ar-track-alvar
   sudo apt-get install ros-indigo-keyboard
+  sudo apt-get install ros-indigo-joy
   ```
 
 2. install the Thymio ROS packages
