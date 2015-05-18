@@ -50,10 +50,10 @@ def create_dice(i,m,s):
     svg_code+="""
 </svg>
 """
-    with open('dice_1.svg','w+') as f:
+    with open('dice_{i}.svg'.format(i=i),'w+') as f:
         print svg_code
         f.write(svg_code)
-    with open('dice_1.png','w+') as f:
+    with open('dice_{i}.png'.format(i=i),'w+') as f:
         cairosvg.svg2png(bytestring=svg_code,write_to=f)
 
 
@@ -104,4 +104,4 @@ if __name__ == "__main__":
     create_markers(6*n)
     for m in range(n):
         create_multimarker_xml(4,5,m)
-        create_dice(6*m,4,5)
+        create_dice(m,4,5)
