@@ -71,7 +71,7 @@ Notes
 ----
 
 You may need to kill and restart
-`roslaunch usi_lab_4 skelethon.launch`
+`roslaunch usi_lab_4 skeleton.launch`
 every time you start a new simulation.
 
 
@@ -95,10 +95,10 @@ The most important topics that carry sensing informations are
 
 ### Markers
 
-The face of each cube is covered by a unique visual marker that is detectable by the robot using its on-board
-camera using the ROS package [`ar_track_alvar`](http://wiki.ros.org/ar_track_alvar), which publishes the id and pose of one of the faces of the cube based on the xml descriptions contained in /bundles. Each pose is given with respect to the camera frame called `camera_link`. Moreover, for every detected cube, the node publishes a [tf](http://wiki.ros.org/tf) coordinates frame. tf is a ROS package that takes care of transforming between the various coordinate frame.
+Each cube is covered by unique visual markers that are detectable by the robot using its on-board
+camera and the ROS package [`ar_track_alvar`](http://wiki.ros.org/ar_track_alvar), which publishes the id and pose of one of the faces of the cube based on the xml descriptions contained in /bundles. Each pose is given with respect to the camera frame denoted as `camera_link`. Moreover, for every detected cube, the node publishes a [tf](http://wiki.ros.org/tf) coordinates frame. tf is a ROS package that takes care of transforming between the various coordinate frame.
 
-To get the range and bearing of the center of the cube with respect to the robot center, you should first use tf to get the pose in the robot frame `base_link`, as explained [here](http://wiki.ros.org/tf/Overview/Transformations,http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF). For example, using C++
+To get the range and bearing of the center of the cube with respect to the robot center, you should first use tf to get the pose in the robot frame `base_link`, as explained [here](http://wiki.ros.org/tf/Overview/Transformations) and [here](http://wiki.ros.org/navigation/Tutorials/RobotSetup/TF). For example, using C++:
 
 ```c++
     tf::TransformListener listener(ros::Duration(10));
@@ -112,8 +112,8 @@ To get the range and bearing of the center of the cube with respect to the robot
         try{
             listener.transformPose("base_link",cube_pose_in_camera_frame,cube_pose_in_robot_frame);
             return tf::Point(cube_pose_in_robot_frame.pose.point.x,
-                             cube_pose_in_robot_frame.pose.point.y,
-                             cube_pose_in_robot_frame.pose.point.z);
+                             cube_pose_in_robot_frame.pose.position.y,
+                             cube_pose_in_robot_frame.pose.position.z);
         }
         catch(tf::TransformException& ex){
             ROS_ERROR("Received an exception trying to transform a point from \"%s\" to \"base_link\": %s",
@@ -124,14 +124,14 @@ To get the range and bearing of the center of the cube with respect to the robot
 ```
 
 
-Finally, a simple trasformation from cartesinan to polar, gives you the range and bearing of the cube.
+Finally, a simple transformation from Cartesian to polar coordinates gives you the range and bearing of the cube.
 
 
 Robot Model
 ----------
 
-To localize a marker in the 3D world, the robot needs to have both a model of the marker and of itself.
-The later is contained in the file thymioid/models/thymioid.urdf.xacro. If you change the pitch of the camera, you should also change the robot description and in particular update the orientation of the  `camera_body_support_joint`
+To locate a marker in the 3D world, the robot needs to have a model of the marker and of itself.
+The later is contained in the file thymioid/models/thymioid.urdf.xacro. If you change the pitch of the camera, you should also change the robot model and, in particular, update the orientation of the  `camera_body_support_joint`
 ```xml
 <joint name="camera_body_support_joint" type="fixed">
     <origin xyz="0.015 0 0" rpy="0 0.2618 0"/>
@@ -140,4 +140,4 @@ The later is contained in the file thymioid/models/thymioid.urdf.xacro. If you c
 </joint>
 ```
 
-which by default is tilded by 15 degrees (i.e. 0.2618 rad).
+which by default is tilted by 15 degrees (i.e. 0.2618 rad).
