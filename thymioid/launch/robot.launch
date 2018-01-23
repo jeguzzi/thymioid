@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find thymio_driver)/launch/base.launch" />
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thymioid)/models/thymioid.urdf.xacro'" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+</launch>
