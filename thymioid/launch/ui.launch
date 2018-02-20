@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <launch>
   <node name="ups_ward" type="ups_ward_node.py" pkg="thymioid" output="screen"/>
-  <node name="ui_node" type="ui_node.py" pkg="thymioid" output="screen">
-    <rosparam command="load" file="$(find thymioid)/configuration/wlan.yaml" />
+  <node name="ui_node" type="ui_node.py" pkg="thymioid" output="screen"/>
+  <node name="wifi_monitor" type="wifi_node_pipe.py" pkg="thymioid" output="screen">
+    <rosparam param="wlan_interfaces">[drone_wifi]</rosparam>
   </node>
 </launch>
