@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 import rospy
 from menu import Menu
 from watchdog.events import FileSystemEventHandler
@@ -22,12 +24,12 @@ class WifiUI(Menu, FileSystemEventHandler):
 
     def __init__(self, index, interface='wlan0'):
         self.interface = interface
-        _state = '/run/network/ifstate.{interface}'.format(interface=interface)
+        self.run_state = '/run/network/ifstate.{interface}'.format(interface=interface)
         self.configurations = ['', interface] + rospy.get_param("~wlan_interfaces", [])
         super(WifiUI, self).__init__(index, len(self.configurations))
-        self.config = get_configuration(_state, self.configurations)
+        self.config = get_configuration(self.run_state, self.configurations)
         observer = Observer()
-        observer.schedule(self, _state, recursive=False)
+        observer.schedule(self, os.path.dirname(self.run_state), recursive=False)
         observer.start()
 
     def on_modified(self, event):

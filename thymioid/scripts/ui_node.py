@@ -12,13 +12,13 @@ SELECTION_TIMEOUT = 3
 TARGET_TIMEOUT = 8
 
 
-def service_is_running(name):
-    try:
-        status = subprocess.check_output(["/etc/init.d/" + name, "status"])
-        return status.find('running') >= 0
-    except Exception as e:
-        rospy.logerr("Service is running, got exception %s" % e)
-        return False
+# def service_is_running(name):
+#     try:
+#         status = subprocess.check_output(["/etc/init.d/" + name, "status"])
+#         return status.find('running') >= 0
+#     except Exception as e:
+#         rospy.logerr("Service is running, got exception %s" % e)
+#         return False
 
 
 class UI(object):
