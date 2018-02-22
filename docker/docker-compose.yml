@@ -1,0 +1,7 @@
+version: '3'
+services:
+  robot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: jeguzzi/thymioid

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="demos" default="[ml]"/>
+  <node name="demo_menu" type="demo_menu.py" pkg="thymioid" output="screen">
+    <rosparam param="demos" subst_value="True">$(arg demos)</rosparam>
+  </node>
+</launch>

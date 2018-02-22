@@ -24,6 +24,10 @@ TARGET_TIMEOUT = 8
 class UI(object):
 
     def _init_buttons(self):
+        self.long_press = rospy.get_param('~long_press_duration', LONG_PRESS)
+        self.menu_timeout = rospy.get_param('~menu_timeout', MENU_TIMEOUT)
+        self.selection_timeout = rospy.get_param('~selection_timeout', SELECTION_TIMEOUT)
+        self.target_timeout = rospy.get_param('~target_timeout', TARGET_TIMEOUT)
         self.last_time_button_down = {}
         self.buttons = ['left', 'center', 'right', 'forward', 'backward']
         for b in self.buttons:
@@ -137,20 +141,20 @@ class UI(object):
     def check_menu_timeout(self):
         if self.menu is not None and self.target_config is None:
             dt = rospy.Time.now() - self.menu_ts
-            if dt.to_sec() > MENU_TIMEOUT:
+            if dt.to_sec() > self.menu_timeout:
                 # rospy.loginfo('timeout menu')
                 self.menu = None
 
     def check_desired_config_timeout(self):
         if self.desired_config is not None and self.target_config is None:
             dt = rospy.Time.now() - self.desired_config_ts
-            if dt.to_sec() > SELECTION_TIMEOUT:
+            if dt.to_sec() > self.selection_timeout:
                 # rospy.loginfo('timeout selection')
                 self.desired_config = None
 
     def check_target_config_timeout(self):
         if self.target_config is not None:
-            if (rospy.Time.now() - self.target_config_ts).to_sec() > TARGET_TIMEOUT:
+            if (rospy.Time.now() - self.target_config_ts).to_sec() > self.target_timeout:
                 # rospy.loginfo('timeout target')
                 self.target_config = None
 
@@ -196,7 +200,7 @@ class UI(object):
         self.beat = not self.beat
 
     def shutdown_odroid(self):
-        subprocess.call(['sudo', 'shutdown', 'now'])
+        subprocess.call(['shutdown', 'now'])
         # print "SHUTDOWN ODROID"
 
     def on_long_press(self, button):
@@ -265,7 +269,7 @@ class UI(object):
     def check_long_press(self):
         for b in self.buttons:
             if(self.last_time_button_down.get(b, None) and
-               (rospy.Time.now() - self.last_time_button_down.get(b)).to_sec() > LONG_PRESS):
+               (rospy.Time.now() - self.last_time_button_down.get(b)).to_sec() > self.long_press):
                 self.last_time_button_down[b] = None
                 self.on_long_press(b)
 
