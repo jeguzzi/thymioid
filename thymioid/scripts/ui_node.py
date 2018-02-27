@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess
+# import subprocess
 
 import rospy
 from std_msgs.msg import Bool, Empty, Int8
@@ -19,6 +19,8 @@ TARGET_TIMEOUT = 8
 #     except Exception as e:
 #         rospy.logerr("Service is running, got exception %s" % e)
 #         return False
+
+_shutdown_pipe = '/shutdown'
 
 
 class UI(object):
@@ -200,7 +202,9 @@ class UI(object):
         self.beat = not self.beat
 
     def shutdown_odroid(self):
-        subprocess.call(['shutdown', 'now'])
+        with open(_shutdown_pipe, 'w') as f:
+            f.write('shutdown\n')
+        # subprocess.call(['shutdown', 'now'])
         # print "SHUTDOWN ODROID"
 
     def on_long_press(self, button):
