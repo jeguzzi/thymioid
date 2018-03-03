@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<robot name="thymioid" xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#xacro">
+
+  <xacro:include filename="$(find thymio_description)/urdf/base.urdf.xacro"/>
+
+  <xacro:include filename="$(find thymioid_description)/urdf/camera.urdf.xacro"/>
+
+
+  <xacro:thymio />
+
+    <link name="chassis_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0.01"/>
+        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
+      </inertial>
+      <collision>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/chassis_collision.dae"/>
+        </geometry>
+      </collision>
+      <visual>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/chassis.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="base_chassis_joint" type="fixed">
+      <origin xyz="0.0081 0 0.053" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="chassis_link"/>
+    </joint>
+
+    <link name="spacers_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0.001"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+      <collision>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/spacers.dae"/>
+        </geometry>
+      </collision>
+      <visual>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/spacers.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="chassis_spacers_joint" type="fixed">
+      <origin xyz="-0.016 0.041 0.0344" rpy="0 0 0"/>
+      <parent link="chassis_link"/>
+      <child link="spacers_link"/>
+    </joint>
+
+    <link name="ups_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0.001"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+      <collision>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/ups.dae"/>
+        </geometry>
+      </collision>
+      <visual>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/ups.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="spacers_ups_joint" type="fixed">
+      <origin xyz="0.031 0 0.0078" rpy="0 0 0"/>
+      <parent link="spacers_link"/>
+      <child link="ups_link"/>
+    </joint>
+
+    <link name="odroid_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0.001"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+      </inertial>
+      <collision>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/odroid_collision.dae"/>
+        </geometry>
+      </collision>
+      <visual>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/odroid_very_simple.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="spacers_odroid_joint" type="fixed">
+      <origin xyz="0.01 0 0 " rpy="0 0 0"/>
+      <parent link="spacers_link"/>
+      <child link="odroid_link"/>
+    </joint>
+
+
+    <!-- <link name="odroid_link">
+      <inertial>
+        <origin xyz="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
+      </inertial>
+      <collision>
+        <origin xyz="-0.002 0 0"/>
+        <geometry>
+          <box size="0.026 0.105 0.052"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="-0.02 0.033 -0.026" rpy="0 0 -1.57"/>
+        <geometry>
+          <mesh filename="package://thymioid_description/meshes/odroid_c1_s.dae"/>
+        </geometry>
+        <material name="blue">
+          <color rgba="0.0 0.3 0.5 1.0"/>
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="0.003 0.011 0.006" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.001 0.08 0.046"/>
+        </geometry>
+        <material name="blue">
+          <color rgba="0.0 0.3 0.5 1.0"/>
+        </material>
+      </visual>
+      <visual>
+        <origin xyz="0.006 0.001 0.006" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.008 0.055 0.045"/>
+        </geometry>
+        <material name="grey">
+          <color rgba="0.9 0.9 0.9 1.0"/>
+        </material>
+      </visual>
+
+    </link>
+
+    <joint name="chassis_odroid_joint" type="fixed">
+      <origin xyz="0.01 0.012 0.044" rpy="0 0 0"/>
+      <parent link="chassis_link"/>
+      <child link="odroid_link"/>
+    </joint> -->
+
+
+    <xacro:web_camera/>
+
+
+</robot>
