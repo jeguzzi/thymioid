@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="thymioid" xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface">
+<robot name="thymioid" xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#xacro">
 
   <xacro:include filename="$(find thymio_driver)/models/base.urdf.xacro"/>
 
