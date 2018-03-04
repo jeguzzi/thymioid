@@ -7,62 +7,36 @@
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.01"/>
-        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
+        <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
       </inertial>
-      <collision>
-        <geometry>
-           <mesh filename="package://thymioid_description/meshes/camera_support.dae" />
-        </geometry>
-      </collision>
+      <!-- <collision> <geometry> <mesh filename="package://thymioid_description/meshes/camera_support.dae" /> </geometry> </collision> -->
       <visual>
         <geometry>
-  	       <mesh filename="package://thymioid_description/meshes/camera_support.dae" />
+          <mesh filename="package://thymioid_description/meshes/camera_support.dae"/>
         </geometry>
       </visual>
     </link>
 
     <link name="camera_body_link">
       <inertial>
-        <origin xyz="0 0 0"/>
-        <mass value="0.01"/>
-        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
+        <origin xyz="0.008 0 0"/>
+        <mass value="0.02"/>
+        <inertia ixx="6e-6" ixy="0" ixz="0" iyy="2e-6" iyz="0" izz="5e-6"/>
       </inertial>
       <collision>
         <geometry>
-           <mesh filename="package://thymioid_description/meshes/camera.dae" />
+          <mesh filename="package://thymioid_description/meshes/camera.dae"/>
         </geometry>
       </collision>
       <visual>
         <geometry>
-  	       <mesh filename="package://thymioid_description/meshes/camera.dae" />
+          <mesh filename="package://thymioid_description/meshes/camera.dae"/>
         </geometry>
       </visual>
     </link>
 
-    <link name="camera_link">
-      <!-- <inertial>
-        <origin xyz="0 0 0"/>
-        <mass value="0.01"/>
-        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
-      </inertial>
-      <collision>
-        <geometry>
-           <box size="0.02 0.01 0.016"/>
-        </geometry>
-      </collision>
-      <visual>
-        <geometry>
-  	       <box size="0.02 0.01 0.016"/>
-        </geometry>
-        <material name="Grey">
-  	       <color rgba="0.0 0.0 0.0 1.0"/>
-        </material>
-      </visual> -->
-    </link>
-
-    <link name="camera_optical_link">
-    </link>
-
+    <link name="camera_link"/>
+    <link name="camera_optical_link"/>
 
     <joint name="ups_camera_joint" type="fixed">
       <origin xyz="0.0047 -0.032 0.044" rpy="0 0 0"/>
@@ -80,8 +54,7 @@
 
     </joint>
 
-
-<!-- http://www.ros.org/reps/rep-0103.html -->
+    <!-- http://www.ros.org/reps/rep-0103.html -->
 
     <joint name="camera_frame_joint" type="fixed">
       <origin xyz="0.01 0 0"/>
@@ -89,27 +62,25 @@
       <child link="camera_link"/>
     </joint>
 
-
     <joint name="camera_optical_joint" type="fixed">
       <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
       <parent link="camera_link"/>
       <child link="camera_optical_link"/>
     </joint>
 
-
     <gazebo reference="camera_link">
-      <sensor type="camera" name="camera1">
+      <sensor type="camera" name="head_camera">
         <update_rate>30.0</update_rate>
-        <camera name="head">
-          <horizontal_fov>1.3962634</horizontal_fov>
+        <camera name="head_camera">
+          <horizontal_fov>0.786</horizontal_fov>
           <image>
             <width>640</width>
             <height>480</height>
             <format>R8G8B8</format>
           </image>
           <clip>
-            <near>0.02</near>
-            <far>300</far>
+            <near>0.01</near>
+            <far>20</far>
           </clip>
           <noise>
             <type>gaussian</type>
@@ -124,12 +95,18 @@
           <imageTopicName>image_raw</imageTopicName>
           <cameraInfoTopicName>camera_info</cameraInfoTopicName>
           <frameName>camera_optical_link</frameName>
-          <hackBaseline>0.07</hackBaseline>
-          <distortionK1>0.0</distortionK1>
-          <distortionK2>0.0</distortionK2>
-          <distortionK3>0.0</distortionK3>
-          <distortionT1>0.0</distortionT1>
+          <hackBaseline>0.0</hackBaseline>
+          <distortionK1>-0.003061</distortionK1>
+          <distortionK2>0.044691</distortionK2>
+          <distortionK3>0.012541</distortionK3>
+          <distortionT1>-0.00085</distortionT1>
           <distortionT2>0.0</distortionT2>
+
+          <CxPrime>333.88</CxPrime>
+          <Cx>334.87</Cx>
+          <Cy>281.10</Cy>
+
+
         </plugin>
       </sensor>
     </gazebo>
