@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-  <include file="$(find thymio_driver)/launch/base.launch" />
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find thymioid)/models/thymioid.urdf.xacro'" />
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+  <arg name="name" default="$(optenv hostname)"/>
+  <arg name="device" default="ser:device=/dev/ttyACM0"/>
+
+  <include file="$(find thymioid_description)/launch/model.launch">
+    <arg name="name" value="$(arg name)"/>
+  </include>
+
+  <include file="$(find thymio_driver)/launch/base.launch" ns="$(eval arg('name') or '/')">
+    <arg name="device" value="$(arg device)"/>
+  </include>
+
 </launch>
