@@ -44,9 +44,12 @@
   <run_depend>urdf</run_depend>
 
 
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
+  <!-- To automatically export GAZEBO_MODEL_PATH -->
 
-  </export>
+  <!-- <export>
+    <gazebo_ros gazebo_model_path="${prefix}/.."/>
+  </export> -->
+
+  <!-- !!!!!! Only works if -->
+  <!-- <run_depend>gazebo_ros</run_depend> -->
 </package>
