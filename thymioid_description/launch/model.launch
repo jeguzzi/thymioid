@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="name" default=""/>
+  <arg name="tf_name" value="$(eval arg('name') + '/' if arg('name') else '')"/>
+
+  <group ns="$(eval arg('name') or '/')">
+    <param name="tf_prefix" value="$(arg name)"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find thymioid_description)/urdf/thymioid.urdf.xacro
+      name:=$(arg tf_name)"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
+  </group>
+
+</launch>

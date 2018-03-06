@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 	<arg name="name" default="$(optenv HOSTNAME)"/>
-	<arg name="marker_size" default="4" />
+	<arg name="marker_size" default="3.6" />
 	<arg name="max_new_marker_error" default="0.08" />
 	<arg name="max_track_error" default="0.2" />
 
