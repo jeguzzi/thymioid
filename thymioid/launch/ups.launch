@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="name" default="$(optenv hostname)"/>
+  <arg name="name" default="$(optenv HOSTNAME)"/>
   <node name="ups" type="ups_node.py" pkg="ups" ns="$(eval arg('name') or '/')"/>
 </launch>

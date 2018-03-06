@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-  <arg name="name" default="$(optenv hostname)"/>
+  <arg name="name" default="$(optenv HOSTNAME)"/>
   <arg name="wlans" default="$(optenv wlans [drone_wifi])"/>
 
   <arg name="long_press_duration" default="3"/>

@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <launch>
-	<arg name="name" default="$(optenv hostname)"/>
+	<arg name="name" default="$(optenv HOSTNAME)"/>
 	<arg name="marker_size" default="4" />
 	<arg name="max_new_marker_error" default="0.08" />
 	<arg name="max_track_error" default="0.2" />
 
+	<arg name="tf_prefix" value="$(eval arg('name') + '/' if arg('name') else '')"/>
+
 	<arg name="cam_image_topic" default="camera/image_raw" />
 	<arg name="cam_info_topic" default="camera/camera_info" />
-	<arg name="output_frame" default="camera_optical_link" />
+	<arg name="output_frame" default="$(arg tf_prefix)camera_optical_link" />
 	<!-- <arg name="bundle_files" default="$(eval '\n'.join([find('thymioid'))/configuration/bundles/multimarker_{n}.xml.format(n=n) for n in range(20)])"/> -->
 
   <arg name="bundle_files" default="$(find thymioid)/configuration/bundles/multimarker_0.xml
