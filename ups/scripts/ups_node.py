@@ -12,7 +12,7 @@ IN = 0
 OUT = 1
 
 
-def setup_gpio(self):
+def setup_gpio():
     wp.wiringPiSetup()
     wp.pinMode(AC_OK, IN)
     wp.pinMode(BATT_OK, IN)
