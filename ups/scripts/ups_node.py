@@ -28,6 +28,7 @@ class ups_state_listener(object):
         self.ac_pub = rospy.Publisher('ups/ac', Bool, queue_size=1)
         self.batt_pub = rospy.Publisher('ups/battery', Bool, queue_size=1)
         rospy.Timer(rospy.Duration(1), self.update)
+        rospy.spin()
 
     def update(self, evt):
         ac_ok = wp.digitalRead(AC_OK)
