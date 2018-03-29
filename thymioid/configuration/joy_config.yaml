@@ -27,20 +27,124 @@ teleop:
       - axis: 1
         target: data
         scale: 1.0
-        offset: 1.0
+        offset: 1.2
   led_alive:
     type: topic
     message_type: "std_msgs/Empty"
     topic_name: led/gesture/alive
     deadman_buttons: [1]  # RT + A
     axis_mappings: []
-  play_sound:
+  led_off:
+    type: topic
+    message_type: "std_msgs/Empty"
+    topic_name: led/gesture/off
+    deadman_buttons: [0]  # RT + X
+    axis_mappings: []
+  body_led:
+    type: topic
+    message_type: "std_msgs/ColorRGBA"
+    topic_name: led/body/top
+    deadman_buttons: [8]  # RT + X
+    axis_mappings:
+      - axis: 0
+        target: r
+        scale: 0.5
+        offset: 0.5
+      - axis: 1
+        target: g
+        scale: 0.5
+        offset: 0.5
+      - axis: 2
+        target: b
+        scale: 0.5
+        offset: 0.5
+  play_sound_0:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [2]  # RT + B
-    axis_mappings:
-      - axis: 5
+    deadman_buttons: [8, 0]
+    axis_mappings: []
+    message_value:
+      -
         target: sound
-        scale: 1
-        offset: 3
+        value: 0
+  play_sound_1:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 1]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 1
+  play_sound_2:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 2]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 3
+  play_sound_3:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 3]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 3
+  play_sound_4:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 4]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 4
+  play_sound_5:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 5]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 5
+  play_sound_6:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 6]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 6
+  play_sound_7:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 9]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: 7
+  play_sound_8:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: sound/play/system
+    deadman_buttons: [8, 10]
+    axis_mappings: []
+    message_value:
+      -
+        target: sound
+        value: -1
