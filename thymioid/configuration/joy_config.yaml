@@ -18,3 +18,29 @@ teleop:
         target: angular.z
         scale: 2.0
         offset: 0.0
+  led_kit:
+    type: topic
+    message_type: "std_msgs/Float32"
+    topic_name: leds/gestures/kit
+    deadman_buttons: [3]  # RT + Y
+    axis_mappings:
+      - axis: 1
+        target: value
+        scale: 1.0
+        offset: 1.0
+  led_alive:
+    type: topic
+    message_type: "std_msgs/Empty"
+    topic_name: led/gestures/alive
+    deadman_buttons: [1]  # RT + A
+    axis_mappings: []
+  play_sound:
+    type: topic
+    message_type: "thymio_msgs/SystemSound"
+    topic_name: leds/gestures/kit
+    deadman_buttons: [2]  # RT + B
+    axis_mappings:
+      - axis: 5
+        target: sound
+        scale: 1
+        offset: 3
