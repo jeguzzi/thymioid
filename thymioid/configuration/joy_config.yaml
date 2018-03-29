@@ -44,11 +44,11 @@ teleop:
     type: topic
     message_type: "std_msgs/ColorRGBA"
     topic_name: led/body/top
-    deadman_buttons: [8]  # RT + X
+    deadman_buttons: [6]  # RT + X
     axis_mappings:
       - axis: 0
         target: r
-        scale: 0.5
+        scale: -0.5
         offset: 0.5
       - axis: 1
         target: g
@@ -56,13 +56,13 @@ teleop:
         offset: 0.5
       - axis: 2
         target: b
-        scale: 0.5
+        scale: -0.5
         offset: 0.5
   play_sound_0:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 0]
+    deadman_buttons: [6, 0]
     axis_mappings: []
     message_value:
       -
@@ -72,7 +72,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 1]
+    deadman_buttons: [6, 1]
     axis_mappings: []
     message_value:
       -
@@ -82,17 +82,17 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 2]
+    deadman_buttons: [6, 2]
     axis_mappings: []
     message_value:
       -
         target: sound
-        value: 3
+        value: 2
   play_sound_3:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 3]
+    deadman_buttons: [6, 3]
     axis_mappings: []
     message_value:
       -
@@ -102,7 +102,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 4]
+    deadman_buttons: [6, 4]
     axis_mappings: []
     message_value:
       -
@@ -112,7 +112,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 5]
+    deadman_buttons: [6, 5]
     axis_mappings: []
     message_value:
       -
@@ -122,7 +122,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 6]
+    deadman_buttons: [6, 6]
     axis_mappings: []
     message_value:
       -
@@ -132,7 +132,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 9]
+    deadman_buttons: [6, 9]
     axis_mappings: []
     message_value:
       -
@@ -142,7 +142,7 @@ teleop:
     type: topic
     message_type: "thymio_msgs/SystemSound"
     topic_name: sound/play/system
-    deadman_buttons: [8, 10]
+    deadman_buttons: [6, 10]
     axis_mappings: []
     message_value:
       -
