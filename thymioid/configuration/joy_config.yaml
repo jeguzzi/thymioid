@@ -6,17 +6,17 @@ teleop:
     type: topic
     message_type: "geometry_msgs/Twist"
     topic_name: cmd_vel
-    deadman_buttons: [7]
+    deadman_buttons: []
     axis_mappings:
       -
         axis: 3  # Right thumb stick (up/down)
         target: linear.x
-        scale: 0.15
+        scale: 0.12
         offset: 0.0
       -
-        axis: 0  # Left thumb stick (left/right)
+        axis: 2  # Left thumb stick (left/right)
         target: angular.z
-        scale: 2.0
+        scale: 1.2
         offset: 0.0
   led_kit:
     type: topic
