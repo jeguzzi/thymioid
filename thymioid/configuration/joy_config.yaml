@@ -21,17 +21,17 @@ teleop:
   led_kit:
     type: topic
     message_type: "std_msgs/Float32"
-    topic_name: leds/gestures/kit
+    topic_name: led/gesture/kit
     deadman_buttons: [3]  # RT + Y
     axis_mappings:
       - axis: 1
-        target: value
+        target: data
         scale: 1.0
         offset: 1.0
   led_alive:
     type: topic
     message_type: "std_msgs/Empty"
-    topic_name: led/gestures/alive
+    topic_name: led/gesture/alive
     deadman_buttons: [1]  # RT + A
     axis_mappings: []
   play_sound:
