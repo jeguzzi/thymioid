@@ -19,9 +19,12 @@ def main():
     rospy.init_node("camera_pitch_controller")
     # ns = rospy.get_namespace()
     joint = rospy.get_param('~joint', 'camera_body_support_joint')
-    pub = rospy.Publisher("joint_states", JointState, queue_size=1)
+    pub = rospy.Publisher("joint_states", JointState, queue_size=1, latch=True)
     msg = JointState()
     msg.name = [joint]
+    msg.header.stamp = rospy.Time.now()
+    msg.position = [rospy.get_param('~pitch')]
+    pub.publish(msg)
     Server(CameraConfig, change_pitch(pub, msg))  # , namespace="{ns}/camera_joint".format(ns=ns))
     rospy.spin()
 
