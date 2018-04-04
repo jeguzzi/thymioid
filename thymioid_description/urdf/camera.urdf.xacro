@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#xacro">
 
-  <xacro:macro name="web_camera">
+  <xacro:arg name="camera_joint_type" default="fixed"/>
+  <xacro:arg name="camera_pitch" default="0"/>
+
+  <xacro:macro name="web_camera" params="camera_joint_type camera_pitch">
 
     <link name="camera_support_link">
       <inertial>
@@ -44,13 +47,13 @@
       <child link="camera_support_link"/>
     </joint>
 
-    <joint name="camera_body_support_joint" type="fixed">
-      <origin xyz="0.0095 0 -0.0051" rpy="0 0.2618 0"/>
+    <joint name="camera_body_support_joint" type="$(arg camera_joint_type)">
+      <origin xyz="0.0095 0 -0.0051" rpy="0 $(arg camera_pitch) 0"/>
       <parent link="camera_support_link"/>
       <child link="camera_body_link"/>
       <axis xyz="0 1 0"/>
-
-      <limit lower="-0.7" upper="0.9" effort="0" velocity="0"/>
+      <limit lower="-0.34" upper="1.3" effort="1e-9" velocity="1e-9"/>
+      <dynamics friction="1e6"/>
 
     </joint>
 

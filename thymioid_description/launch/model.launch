@@ -4,10 +4,14 @@
   <arg name="name" default=""/>
   <arg name="tf_name" value="$(eval arg('name') + '/' if arg('name') else '')"/>
 
+  <arg name="camera_is_fixed" default="true"/>
+  <arg name="camera_pitch" default="0.2618"/>
+  <arg name="camera_joint_type" value="$(eval 'fixed' if arg('camera_is_fixed') else 'revolute')"/>
+
   <group ns="$(eval arg('name') or '/')">
     <param name="tf_prefix" value="$(arg name)"/>
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find thymioid_description)/urdf/thymioid.urdf.xacro
-      name:=$(arg tf_name)"/>
+      name:=$(arg tf_name) camera_pitch:=$(arg camera_pitch) camera_joint_type:=$(arg camera_joint_type)"/>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
   </group>
 

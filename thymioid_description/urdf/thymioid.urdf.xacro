@@ -133,6 +133,6 @@
     <child link="odroid_link"/>
   </joint>
 
-  <xacro:web_camera/>
+  <xacro:web_camera camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"/>
 
 </robot>
