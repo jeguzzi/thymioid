@@ -15,7 +15,7 @@
 
   <include file="$(find thymio_driver)/launch/base.launch" ns="$(eval arg('name') or '/')">
     <arg name="device" value="$(arg device)"/>
-    <arg name="motor_speed_deadband" value="(arg motor_speed_deadband)"/>
+    <arg name="motor_speed_deadband" value="$(arg motor_speed_deadband)"/>
   </include>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
