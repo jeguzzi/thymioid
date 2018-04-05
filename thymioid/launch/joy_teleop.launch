@@ -4,7 +4,6 @@
   <arg name="name" default="$(optenv HOSTNAME)"/>
   <arg name="joy_dev" default="/dev/input/js0" />
   <arg name="teleop_config" default="$(find thymioid)/configuration/joy_config.yaml" />
-  <arg name="namespace" default="bebop" />
 
   <group ns="$(eval arg('name') or '/')">
     <rosparam file="$(arg teleop_config)" command="load" />
