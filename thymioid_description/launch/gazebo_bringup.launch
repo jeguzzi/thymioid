@@ -8,16 +8,18 @@
   <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
-    <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py">
+    <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py" output="screen">
       <param name="pitch" value="$(arg camera_pitch)"/>
     </node>
-    <node pkg="thymioid" name="gazebo_camera_pitch_controller" type="gazebo_camera_pitch_controller.py">
+    <node pkg="thymioid" name="gazebo_camera_pitch_controller" type="gazebo_camera_pitch_controller.py" output="screen">
       <param name="name" value="$(arg name)"/>
     </node>
   </group>
 
   <include file="$(find thymioid_description)/launch/model.launch">
     <arg name="name" value="$(arg name)"/>
+    <arg name="camera_is_fixed" value="$(arg camera_is_fixed)"/>
+    <arg name="camera_pitch" value="$(arg camera_joint_pitch)"/>
   </include>
 
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
