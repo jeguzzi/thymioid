@@ -3,6 +3,19 @@
 
   <arg name="name" default=""/>
   <arg name="pose" default="-x 0 -y 0 -z 0"/>
+  <arg name="camera_is_fixed" default="true"/>
+  <arg name="camera_pitch" default="0.2618"/>
+  <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
+
+  <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
+    <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py">
+      <param name="pitch" value="$(arg camera_pitch)"/>
+    </node>
+    <node pkg="thymioid" name="gazebo_camera_pitch_controller" type="gazebo_camera_pitch_controller.py">
+      <param name="name" value="$(arg name)"/>
+    </node>
+  </group>
+
   <include file="$(find thymioid_description)/launch/model.launch">
     <arg name="name" value="$(arg name)"/>
   </include>

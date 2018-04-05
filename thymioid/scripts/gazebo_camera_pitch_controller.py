@@ -4,6 +4,7 @@ import rospy
 from gazebo_msgs.srv import SetModelConfiguration
 from sensor_msgs.msg import JointState
 
+
 # string model_name
 # string urdf_param_name
 # string[] joint_names
