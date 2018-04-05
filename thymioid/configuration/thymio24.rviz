@@ -4,10 +4,12 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
+        - /Status1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5
-    Tree Height: 301
+    Tree Height: 607
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -83,123 +85,132 @@ Visualization Manager:
       Unreliable: false
       Value: false
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        ar_marker_0:
-          Value: false
-        ar_marker_102:
-          Value: false
-        ar_marker_12:
-          Value: false
-        ar_marker_24:
-          Value: false
-        ar_marker_48:
-          Value: false
-        ar_marker_54:
-          Value: true
-        ar_marker_6:
-          Value: false
-        ar_marker_60:
-          Value: false
-        ar_marker_72:
-          Value: false
-        base_link:
-          Value: true
-        camera_body_link:
-          Value: true
-        camera_link:
-          Value: true
-        camera_support_link:
-          Value: true
-        ground_left_link:
-          Value: false
-        ground_right_link:
-          Value: false
-        odom:
-          Value: false
-        proximity_center_left_link:
-          Value: false
-        proximity_center_link:
-          Value: false
-        proximity_center_right_link:
-          Value: false
-        proximity_left_link:
-          Value: false
-        proximity_rear_left_link:
-          Value: false
-        proximity_rear_right_link:
-          Value: false
-        proximity_right_link:
-          Value: false
-        trunk_link:
-          Value: false
       Marker Scale: 0.100000001
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          base_link:
-            ground_left_link:
-              {}
-            ground_right_link:
-              {}
-            proximity_center_left_link:
-              {}
-            proximity_center_link:
-              {}
-            proximity_center_right_link:
-              {}
-            proximity_left_link:
-              {}
-            proximity_rear_left_link:
-              {}
-            proximity_rear_right_link:
-              {}
-            proximity_right_link:
-              {}
-            trunk_link:
-              camera_support_link:
-                camera_body_link:
-                  camera_link:
-                    ar_marker_0:
-                      {}
-                    ar_marker_102:
-                      {}
-                    ar_marker_12:
-                      {}
-                    ar_marker_24:
-                      {}
-                    ar_marker_48:
-                      {}
-                    ar_marker_54:
-                      {}
-                    ar_marker_6:
-                      {}
-                    ar_marker_60:
-                      {}
-                    ar_marker_72:
-                      {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
-      Enabled: false
+      Enabled: true
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_body_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_optical_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_support_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        chassis_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ground_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ground_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        laser_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        odroid_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        power_pack_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        proximity_center_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_center_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_center_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_rear_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_rear_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        proximity_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        right_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spacers_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ups_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Name: RobotModel
-      Robot Description: robot_description
-      TF Prefix: ""
+      Robot Description: thymio24/robot_description
+      TF Prefix: thymio24
       Update Interval: 0
-      Value: false
+      Value: true
       Visual Enabled: true
     - Alpha: 0.5
       Buffer Length: 1
@@ -208,7 +219,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /ground/left
+      Topic: /thymio24/ground/left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -218,7 +229,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /ground/right
+      Topic: /thymio24/ground/right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -228,7 +239,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/center
+      Topic: /thymio24/proximity/center
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -238,7 +249,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/right
+      Topic: /thymio24/proximity/right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -248,7 +259,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/rear_right
+      Topic: /thymio24/proximity/rear_right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -258,7 +269,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/center_left
+      Topic: /thymio24/proximity/center_left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -268,7 +279,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/left
+      Topic: /thymio24/proximity/left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -278,7 +289,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/center_right
+      Topic: /thymio24/proximity/center_right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -288,7 +299,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /proximity/rear_left
+      Topic: /thymio24/proximity/rear_right
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -322,18 +333,17 @@ Visualization Manager:
       Use rainbow: true
       Value: true
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /visualization_marker
       Name: Marker
       Namespaces:
-        basic_shapes: true
-        main_shapes: true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /camera/image_raw
+      Image Topic: /thymio24/camera/image_raw
       Name: Camera
       Overlay Alpha: 0.200000003
       Queue Size: 2
@@ -354,7 +364,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: base_link
+    Fixed Frame: thymio24/odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -375,35 +385,35 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 0.668644965
+      Distance: 0.436260253
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.10439232
-        Y: 0.220103472
-        Z: -1.49011612e-07
+        X: 0.0388582647
+        Y: 0.0520665646
+        Z: -1.78813934e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.50979948
+      Pitch: 0.00480001513
       Target Frame: <Fixed Frame>
       Value: XYOrbit (rviz)
-      Yaw: 1.24584591
+      Yaw: 5.11402464
     Saved: ~
 Window Geometry:
   Camera:
     collapsed: false
   Displays:
     collapsed: false
-  Height: 876
+  Height: 848
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000016a00000326fc020000000efb0000001200530065006c0065006300740069006f006e0000000028000000920000006100fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000028000001bc000000d700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006101000001ea000001640000001600fffffffb0000000a0049006d006100670065000000023d000001110000000000000000fb0000000c00430061006d0065007200610100000274000000160000000000000000fb0000000a0049006d006100670065010000028a000000c40000000000000000fb0000000c00430061006d006500720061010000028a000000c40000000000000000fb0000000c00430061006d006500720061010000025c000000f20000000000000000000000010000010f00000326fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000326000000ad00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000055f0000003efc0100000002fb0000000800540069006d006500000000000000055f0000030000fffffffb0000000800540069006d00650100000000000004500000000000000000000003ef0000032600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000016a0000030afc020000000efb0000001200530065006c0065006300740069006f006e0000000028000000920000006100fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000028000002ee000000d700fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d006500720061010000031c000000160000001600fffffffb0000000a0049006d006100670065000000023d000001110000000000000000fb0000000c00430061006d006500720061010000030b000000270000000000000000fb0000000a0049006d006100670065010000028a000000c40000000000000000fb0000000c00430061006d006500720061010000028a000000c40000000000000000fb0000000c00430061006d006500720061010000025c000000f20000000000000000000000010000010f00000326fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000326000000ad00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000055f0000003efc0100000002fb0000000800540069006d006500000000000000055f0000030000fffffffb0000000800540069006d00650100000000000004500000000000000000000003ef0000030a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
