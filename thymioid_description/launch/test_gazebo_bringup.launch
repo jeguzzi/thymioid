@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+
+  <env name="GAZEBO_MODEL_PATH" value="$(find thymio_description)/..:$(find thymioid_description)/..:$(optenv GAZEBO_MODEL_PATH)" />
+  <env name="SVGA_VGPU10" value="0"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="true"/>
+    <arg name="paused" value="false"/>
+    <!-- <arg name="world_name" value="worlds/empty_world"/> -->
+  </include>
+
+  <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
+    <arg name="name" value="thymio10"/>
+    <arg name="pose" value="-x 0 -y 0 -z 0"/>
+  </include>
+
+  <!-- <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
+    <arg name="name" value="thymio11"/>
+    <arg name="pose" value="-x 2 -y 2 -z 0 -yaw 1.3"/>
+  </include>
+
+  <include file="$(find thymio_description)/launch/joy_teleop.launch">
+    <arg name="namespace" value="thymio10"/>
+  </include> -->
+
+  <!-- <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
+    <arg name="name" value="thymio20"/>
+    <arg name="pose" value="-x 1 -y 2 -z 0"/>
+  </include> -->
+
+</launch>

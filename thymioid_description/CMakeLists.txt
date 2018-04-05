@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(thymioid)
+project(thymioid_description)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  rospy
-  std_msgs
-  thymio_msgs
-  dynamic_reconfigure
+  urdf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,10 +67,6 @@ find_package(catkin REQUIRED COMPONENTS
 #   DEPENDENCIES
 #   std_msgs
 # )
-
-generate_dynamic_reconfigure_options(
-  cfg/Camera.cfg
-)
 
 ###################################
 ## catkin specific configuration ##

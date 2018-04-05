@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name" default="$(optenv HOSTNAME)"/>
+  <arg name="device" default="ser:device=/dev/ttyACM0"/>
+  <arg name="motor_speed_deadband" default="$(optenv MOTOR_DEADBAND 10)"/>
+  <arg name="camera_is_fixed" default="$(optenv CAMERA_IS_FIXED true)"/>
+  <arg name="camera_pitch" default="$(optenv CAMERA_PITCH 0.2618)"/>
+  <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
+
+  <include file="$(find thymioid_description)/launch/model.launch">
+    <arg name="name" value="$(arg name)"/>
+    <arg name="camera_is_fixed" value="$(arg camera_is_fixed)"/>
+    <arg name="camera_pitch" value="$(arg camera_joint_pitch)"/>
+  </include>
+
+  <include file="$(find thymio_driver)/launch/base.launch" ns="$(eval arg('name') or '/')">
+    <arg name="device" value="$(arg device)"/>
+    <arg name="motor_speed_deadband" value="$(arg motor_speed_deadband)"/>
+  </include>
+
+  <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
+    <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py">
+      <param name="pitch" value="$(arg camera_pitch)"/>
+    </node>
+  </group>
+
+</launch>

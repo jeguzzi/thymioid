@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="name" default="$(optenv HOSTNAME)"/>
+  <arg name="wlans" default="$(optenv wlans [drone_wifi])"/>
+
+  <arg name="long_press_duration" default="3"/>
+  <arg name="menu_timeout" default="5"/>
+  <arg name="selection_timeout" default="3"/>
+  <arg name="target_timeout" default="8"/>
+
+  <group ns="$(eval arg('name') or '/')">
+
+    <node name="ups_ward" type="ups_ward_node.py" pkg="thymioid" output="screen"/>
+    <node name="ui_node" type="ui_node.py" pkg="thymioid" output="screen"/>
+    <node name="wifi_monitor" type="wifi_node_pipe.py" pkg="thymioid" output="screen">
+      <rosparam param="wlan_interfaces" subst_value="True">$(arg wlans)</rosparam>
+      <param name="long_press_duration" value="$(arg long_press_duration)"/>
+      <param name="menu_timeout" value="$(arg menu_timeout)"/>
+      <param name="selection_timeout" value="$(arg selection_timeout)"/>
+      <param name="target_timeout" value="$(arg target_timeout)"/>
+    </node>
+  </group>
+</launch>
