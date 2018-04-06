@@ -21,6 +21,7 @@ TARGET_TIMEOUT = 8
 #         return False
 
 _shutdown_pipe = '/shutdown'
+_update_pipe = '/update'
 
 
 class UI(object):
@@ -207,6 +208,10 @@ class UI(object):
         # subprocess.call(['shutdown', 'now'])
         # print "SHUTDOWN ODROID"
 
+    def update_odroid(self):
+        with open(_update_pipe, 'w') as f:
+            f.write('update\n')
+
     def on_long_press(self, button):
         # rospy.loginfo('long press %s' % button)
         # the button has been pressed for more than LONG_PRESS seconds
@@ -214,6 +219,9 @@ class UI(object):
             # exit
             self.should_exit = True
             self.on_shutdown()
+        if(button == 'right'):
+            # exit
+            self.update_odroid()
         if(button == 'backward'):
             # shutdown
             # print "SHUTDOWN THYMIO"
