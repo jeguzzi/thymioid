@@ -6,6 +6,9 @@
   <xacro:include filename="$(find thymioid_description)/urdf/camera.urdf.xacro"/>
 
   <xacro:arg name="power_pack" default="true"/>
+  <xacro:arg name="publish_ground_truth" default="false"/>
+  <xacro:arg name="ground_truth_frame_id" default="/world"/>
+  <xacro:arg name="ground_truth_update_rate" default="10.0"/>
 
   <xacro:thymio/>
 
@@ -134,5 +137,22 @@
   </joint>
 
   <xacro:web_camera camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"/>
+
+
+<!-- NOTE: The current version of the gazebo p3d plugin has a bug:
+the field child_frame_id is set to the name of the link (bodyName)
+and not to the frame name (frameName). -->
+
+
+<xacro:if value="$(arg publish_ground_truth)">
+  <gazebo>
+    <plugin name="ground_truth" filename="libgazebo_ros_p3d.so">
+      <frameName>$(arg ground_truth_frame_id)</frameName>
+      <bodyName>base_link</bodyName>
+      <topicName>ground_truth/odom</topicName>
+      <updateRate>$(arg ground_truth_update_rate)</updateRate>
+    </plugin>
+  </gazebo>
+ </xacro:if>
 
 </robot>
