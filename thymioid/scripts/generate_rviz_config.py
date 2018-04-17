@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os
+# import os
 import sys
 
 
@@ -11,7 +11,7 @@ def main():
     #     return
     with open(path) as f:
         config = f.read()
-    print(config)
+    # print(config)
     with open(t_path, 'w') as f:
         f.write(config.format(**locals()))
 
