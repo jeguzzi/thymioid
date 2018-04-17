@@ -10,12 +10,13 @@
 
   <arg name="proximity_max_range" default="0.12"/>
   <arg name="proximity_resolution" default="0.005"/>
+  <arg name="proximity_fov" default="0.3"/>
 
   <group ns="$(eval arg('name') or '/')">
     <param name="tf_prefix" value="$(arg name)"/>
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find thymioid_description)/urdf/thymioid.urdf.xacro
       name:=$(arg tf_name) camera_pitch:=$(arg camera_pitch) camera_joint_type:=$(arg camera_joint_type)
-      proximity_max_range:=$(arg proximity_max_range) proximity_resolution:=$(arg proximity_resolution)"/>
+      proximity_max_range:=$(arg proximity_max_range) proximity_resolution:=$(arg proximity_resolution) proximity_fov:=$(arg proximity_fov)"/>
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub"/>
   </group>
 

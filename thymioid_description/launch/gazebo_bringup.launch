@@ -10,6 +10,7 @@
 
   <arg name="proximity_max_range" default="0.12"/>
   <arg name="proximity_resolution" default="0.005"/>
+  <arg name="proximity_fov" default="0.3"/>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
     <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py" output="screen">
@@ -26,6 +27,7 @@
     <arg name="camera_pitch" value="$(arg camera_joint_pitch)"/>
     <arg name="proximity_max_range" value="$(arg proximity_max_range)"/>
     <arg name="proximity_resolution" value="$(arg proximity_resolution)"/>
+    <arg name="proximity_fov" value="$(arg proximity_fov)"/>
   </include>
 
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
