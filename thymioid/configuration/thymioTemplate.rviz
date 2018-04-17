@@ -297,7 +297,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/rear_right
+      Topic: /{name}/proximity/rear_left
       Unreliable: false
       Value: true
     - Alpha: 0.5
