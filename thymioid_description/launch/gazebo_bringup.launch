@@ -3,9 +3,13 @@
 
   <arg name="name" default=""/>
   <arg name="pose" default="-x 0 -y 0 -z 0"/>
+
   <arg name="camera_is_fixed" default="true"/>
   <arg name="camera_pitch" default="0.2618"/>
   <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
+
+  <arg name="proximity_max_range" default="0.12"/>
+  <arg name="proximity_resolution" default="0.005"/>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
     <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py" output="screen">
@@ -20,6 +24,8 @@
     <arg name="name" value="$(arg name)"/>
     <arg name="camera_is_fixed" value="$(arg camera_is_fixed)"/>
     <arg name="camera_pitch" value="$(arg camera_joint_pitch)"/>
+    <arg name="proximity_max_range" value="$(arg proximity_max_range)"/>
+    <arg name="proximity_resolution" value="$(arg proximity_resolution)"/>
   </include>
 
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
