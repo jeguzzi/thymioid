@@ -7,6 +7,7 @@
   <arg name="camera_pitch" default="$(optenv CAMERA_PITCH 0.2618)"/>
   <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
   <arg name="calibrated" default="$(optenv CALIBRATED false)"/>
+  <arg name="odom_max_rate" default="-1"/>
 
   <include file="$(find thymioid_description)/launch/model.launch">
     <arg name="name" value="$(arg name)"/>
@@ -17,7 +18,8 @@
   <include file="$(find thymio_driver)/launch/base.launch" ns="$(eval arg('name') or '/')">
     <arg name="device" value="$(arg device)"/>
     <arg name="motor_speed_deadband" value="$(arg motor_speed_deadband)"/>
-    <arg name="calibrated" default="$(arg calibrated)"/>
+    <arg name="calibrated" value="$(arg calibrated)"/>
+    <arg name="odom_max_rate" value="$(arg odom_max_rate)"/>
   </include>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
