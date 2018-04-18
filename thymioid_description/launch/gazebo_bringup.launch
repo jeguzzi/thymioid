@@ -16,6 +16,8 @@
   <arg name="ground_truth_frame_id" default="/world"/>
   <arg name="ground_truth_frame_rate" default="30.0"/>
 
+  <arg name="odom_max_rate" default="20.0"/>
+
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
     <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py" output="screen">
       <param name="pitch" value="$(arg camera_pitch)"/>
@@ -35,6 +37,7 @@
     <arg name="publish_ground_truth" value="$(arg publish_ground_truth)"/>
     <arg name="ground_truth_frame_id" value="$(arg ground_truth_frame_id)"/>
     <arg name="ground_truth_frame_rate" value="$(arg ground_truth_frame_rate)"/>
+    <arg name="odom_max_rate" value="$(arg odom_max_rate)"/>
   </include>
 
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
