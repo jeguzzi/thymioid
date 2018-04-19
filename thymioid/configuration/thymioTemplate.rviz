@@ -217,7 +217,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/ground/left
+      Topic: {name}/ground/left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -227,7 +227,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/ground/right
+      Topic: {name}/ground/right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -237,7 +237,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/center
+      Topic: {name}/proximity/center
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -247,7 +247,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/right
+      Topic: {name}/proximity/right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -257,7 +257,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/rear_right
+      Topic: {name}/proximity/rear_right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -267,7 +267,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/center_left
+      Topic: {name}/proximity/center_left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -277,7 +277,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/left
+      Topic: {name}/proximity/left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -287,7 +287,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/center_right
+      Topic: {name}/proximity/center_right
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -297,7 +297,7 @@ Visualization Manager:
       Enabled: true
       Name: Range
       Queue Size: 100
-      Topic: /{name}/proximity/rear_left
+      Topic: {name}/proximity/rear_left
       Unreliable: false
       Value: true
     - Alpha: 0.5
@@ -306,7 +306,7 @@ Visualization Manager:
       Enabled: false
       History Length: 1
       Name: Imu
-      Topic: /{name}/imu
+      Topic: {name}/imu
       Unreliable: false
       Value: false
     - Alpha: 1
@@ -334,7 +334,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.00999999978
       Style: Flat Squares
-      Topic: /{name}/proximity/laser
+      Topic: {name}/proximity/laser
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -350,7 +350,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: false
       Image Rendering: background and overlay
-      Image Topic: /{name}/camera/image_raw
+      Image Topic: {name}/camera/image_raw
       Name: Camera
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -372,7 +372,7 @@ Visualization Manager:
       Zoom Factor: 1
     - Class: rviz/Image
       Enabled: false
-      Image Topic: /{name}/camera/image_raw
+      Image Topic: {name}/camera/image_raw
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -407,7 +407,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.400000006
       Style: Spheres
-      Topic: /{name}/temperature
+      Topic: {name}/temperature
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
