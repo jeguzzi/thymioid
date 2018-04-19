@@ -64,7 +64,7 @@ Visualization Manager:
           Color: 204; 51; 204
           Scale: 1
           Value: true
-        Value: true
+        Value: false
       Enabled: false
       Keep: 10
       Name: Odometry
@@ -416,7 +416,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: {name}/base_link
+    Fixed Frame: {name}/odom
     Frame Rate: 30
   Name: root
   Tools:
