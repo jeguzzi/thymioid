@@ -7,6 +7,6 @@
 
 	<node pkg="thymioid" type="generate_rviz_config.py" name="generate_rviz_config"
 		args="$(find thymioid)/configuration/thymioTemplate.rviz '$(arg name)'" output="screen"/>
-	<node ns="$(eval arg('name') or '/')" pkg="rviz" type="rviz" name="rviz"
+	<node pkg="rviz" type="rviz" name="rviz"
 		args="-d $(find thymioid)/configuration/thymioTemplate.rviz.$(arg suffix)"/>
 </launch>
