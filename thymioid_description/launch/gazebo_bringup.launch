@@ -3,21 +3,20 @@
 
   <arg name="name" default=""/>
   <arg name="pose" default="-x 0 -y 0 -z 0"/>
-
+  <arg name="left_wheel_friction" default="1"/>
+  <arg name="right_wheel_friction" default="1"/>
+  <arg name="wheel_kp" default="10000"/>
+  <arg name="body_kp" default="17500"/>
   <arg name="camera_is_fixed" default="true"/>
   <arg name="camera_pitch" default="0.2618"/>
   <arg name="camera_joint_pitch" default="$(eval arg('camera_pitch') if arg('camera_is_fixed') else 0)"/>
-
   <arg name="proximity_max_range" default="0.12"/>
   <arg name="proximity_resolution" default="0.005"/>
   <arg name="proximity_fov" default="0.3"/>
-
   <arg name="publish_ground_truth" default="false"/>
   <arg name="ground_truth_frame_id" default="/world"/>
   <arg name="ground_truth_frame_rate" default="30.0"/>
-
   <arg name="odom_max_rate" default="20.0"/>
-
   <arg name="camera_is_on" default="true"/>
 
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
@@ -41,6 +40,10 @@
     <arg name="ground_truth_frame_rate" value="$(arg ground_truth_frame_rate)"/>
     <arg name="odom_max_rate" value="$(arg odom_max_rate)"/>
     <arg name="camera_is_on" value="$(arg camera_is_on)"/>
+    <arg name="left_wheel_friction" value="$(arg left_wheel_friction)"/>
+    <arg name="right_wheel_friction" value="$(arg right_wheel_friction)"/>
+    <arg name="wheel_kp" value="$(arg wheel_kp)"/>
+    <arg name="body_kp" value="$(arg body_kp)"/>
   </include>
 
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
