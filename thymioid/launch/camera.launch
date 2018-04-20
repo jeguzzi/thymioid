@@ -13,7 +13,7 @@
   <arg name="enable_audio" default="true"/>
   <arg name="sound_device" default="hw:1,0"/>
   <arg name="sound_sample_rate" default="16000"/>
-  <arg name="sound_format" default="mp3"/>  <!-- mp3 or wave -->
+  <!-- <arg name="sound_format" default="mp3"/> --> <!-- mp3 or wave -->
 
   <group ns="$(eval arg('name') or '/')">
 
@@ -37,7 +37,7 @@
       <arg name="ns" value="camera"/>
       <arg name="channels" value="1"/>
       <arg name="sample_rate" value="$(arg sound_sample_rate)"/>
-      <arg name="format" value="$(arg sound_format)"/>
+      <!-- <arg name="format" value="$(arg sound_format)"/> -->
     </include>
 
   </group>
