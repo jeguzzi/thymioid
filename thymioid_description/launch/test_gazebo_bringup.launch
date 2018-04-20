@@ -13,9 +13,15 @@
   </include>
 
   <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
-    <arg name="name" value="thymio10"/>
+    <arg name="name" value="thymioX"/>
     <arg name="pose" value="-x 0 -y 0 -z 0"/>
-    <arg name="camera_is_fixed" value="false"/>
+    <arg name="camera_is_fixed" value="true"/>
+    <arg name="camera_is_on" value="false"/>
+    <arg name="publish_ground_truth" value="true"/>
+    <arg name="left_wheel_friction" default="1"/>
+    <arg name="right_wheel_friction" default="1"/>
+    <!-- <arg name="wheel_kp" default="100000"/>
+    <arg name="body_kp" default="175000"/> -->
   </include>
 
   <!-- <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
