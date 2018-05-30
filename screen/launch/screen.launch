@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="name" default="$(optenv HOSTNAME)"/>
+
+  <arg name="background" default="[0, 0, 0]"/>
+  <arg name="font_color" default="[255, 255, 255]"/>
+  <arg name="font_name" default="dejavusans"/>
+  <arg name="font_size" default="36"/>
+  <arg name="text_position_x" default="0"/>
+  <arg name="text_position_y" default="0"/>
+  <arg name="text_lines" default="2"/>
+  <arg name="text_alignment" default="left"/>
+  <arg name="image" default="image"/>
+  <arg name="text" default="text"/>
+  <group ns="$(eval arg('name') or '/')">
+
+    <node name="tft" pkg="tft" type="tft_node.py" output="screen">
+      <param name="width" value="320"/>
+      <param name="height" value="240"/>
+      <rosparam param="background" subst_value="True">$(arg background)</rosparam>
+      <rosparam param="font_color" subst_value="True">$(arg font_color)</rosparam>
+      <param name="font_name" value="$(arg font_name)"/>
+      <param name="font_size" value="$(arg font_size)"/>
+      <param name="text_position_x" value="$(arg text_position_x)"/>
+      <param name="text_position_y" value="$(arg text_position_y)"/>
+      <param name="text_lines" value="$(arg text_lines)"/>
+      <param name="text_alignment" value="$(arg text_alignment)"/>
+      <remap from="image" to="$(arg image)"/>
+      <remap from="text" to="$(arg text)"/>
+    </node>
+
+  </group>
+
+</launch>

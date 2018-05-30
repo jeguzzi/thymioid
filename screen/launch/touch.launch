@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="name" default="$(optenv HOSTNAME)"/>
+
+  <group ns="$(eval arg('name') or '/')">
+
+    <node name="create_dev" pkg="tft" type="ts_uinput_start.sh" output="screen">
+    </node>
+
+    <node name="tft_touch" pkg="tft" type="tft_touch.py" output="screen">
+      <param name="continuos" value="true"/>
+      <param name="rate" value="10"/>
+    </node>
+
+  </group>
+
+</launch>
