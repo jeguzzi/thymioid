@@ -14,7 +14,13 @@ import cv_bridge
 import pygame
 import rospkg
 import rospy
-import rsvg
+try:
+    import rsvg
+except ImportError:
+    import gi
+    gi.require_version('Rsvg', '2.0')
+    from gi.repository import Rsvg as rsvg
+
 from dynamic_reconfigure.server import Server
 from sensor_msgs.msg import Image
 from std_msgs.msg import ColorRGBA, Empty, Int32, String
@@ -117,7 +123,11 @@ class TFT(object):
         print(code, path)
         if path:
             self.clear_screen()
-            svg = rsvg.Handle(file=path)
+            try:
+                svg = rsvg.Handle(file=path)
+            except TypeError:
+                handle = rsvg.Handle()
+                svg = handle.new_from_file(path)
             self.display_svg(svg)
 
     def display_svg(self, svg):

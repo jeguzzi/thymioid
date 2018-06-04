@@ -8,8 +8,10 @@ from itertools import cycle
 
 if __name__ == '__main__':
     rospy.init_node('smile')
-    pub = rospy.Publisher('thymio11/tft/emoji', Int32, queue_size=1)
-    pub_text = rospy.Publisher('thymio11/tft/text', String, queue_size=1)
+    # pub = rospy.Publisher('thymio11/tft/emoji', Int32, queue_size=1)
+    # pub_text = rospy.Publisher('thymio11/tft/text', String, queue_size=1)
+    pub = rospy.Publisher('tft/emoji', Int32, queue_size=1)
+    pub_text = rospy.Publisher('tft/text', String, queue_size=1)
     rospy.sleep(1)
     pub_text.publish('Welcome')
     emoji = u"🍓😀🚀😛😱😵😺🤖👩🐶🐯🐸🙉🐥🐝🦋🍄🍕🌰🏀🚘🚥⏰🛎⛔️🔟🔔🔕"
