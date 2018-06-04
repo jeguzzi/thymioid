@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name" default="$(optenv HOSTNAME)"/>
+  <arg name="device" default=""/>
+  <arg name="volume" default="0.5"/>
+  <arg name="language" default="it-IT"/>
+  <arg name="sox" default="pitch -300 echo 0.8 0.88 10 0.6 stretch 1"/>
+  <group ns="$(eval arg('name') or '/')">
+    <node name="soundplay_node" pkg="sound_play" type="soundplay_node.py" output='screen'>
+      <param name="device" value="$(arg device)"/>
+      <param name="speech_engine" value="pico"/>
+      <param name="sox" value="$(arg sox)"/>
+    </node>
+    <node name="sound_node" pkg="thymioid" type="sound_node.py" output='screen'>
+      <param name="volume" value="$(arg volume)"/>
+      <param name="language" value="$(arg language)"/>
+    </node>
+  </group>
+</launch>
