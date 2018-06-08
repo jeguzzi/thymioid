@@ -6,12 +6,12 @@
   <arg name="enable_video" default="true"/>
   <arg name="image_width" default="640"/>
   <arg name="image_height" default="480"/>
-  <arg name="framerate" default="30"/>
+  <arg name="framerate" default="$(optenv CAMERA_FRAMERATE 30)"/>
   <arg name="rectify" default="true"/>
-  <arg name="device" default="/dev/video0"/>
+  <arg name="device" default="$(optenv CAMERA_VIDEO_DEVICE /dev/video0)"/>
 
   <arg name="enable_audio" default="true"/>
-  <arg name="sound_device" default="hw:1,0"/>
+  <arg name="sound_device" default="$(optenv CAMERA_AUDIO_DEVICE hw:1,0)"/>
   <arg name="sound_sample_rate" default="16000"/>
   <arg name="sound_format" default="mp3"/> <!-- mp3 or wave -->
 
