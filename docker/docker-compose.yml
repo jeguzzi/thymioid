@@ -3,5 +3,5 @@ services:
   robot:
     build:
       context: ..
-      dockerfile: docker/Dockerfile
-    image: jeguzzi/thymioid
+      dockerfile: docker/Dockerfile-melodic
+    image: jeguzzi/thymioid-melodic
