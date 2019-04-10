@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="name" default=""/>
+
+  <include file="$(find audio_play)/launch/play.launch">
+    <arg name="ns" value="$(arg name)/camera"/>
+  </include>
+
+</launch>
