@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-# import os
 import sys
 
 
-def main():
+def main() -> None:
     path, name = sys.argv[1:3]
     t_path = '{path}.{name}'.format(**locals())
     # if os.path.exists(t_path):

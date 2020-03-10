@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <robot name="thymioid" xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#xacro">
 
-  <xacro:include filename="$(find thymio_description)/urdf/base.urdf.xacro"/>
-
-  <xacro:include filename="$(find thymioid_description)/urdf/camera.urdf.xacro"/>
+  <xacro:include filename="$(find thymio_description)/share/thymio_description/urdf/base.urdf.xacro"/>
+  <xacro:include filename="camera.urdf.xacro"/>
 
   <xacro:arg name="power_pack" default="true"/>
 

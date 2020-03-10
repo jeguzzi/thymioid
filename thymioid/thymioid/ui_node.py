@@ -1,95 +1,83 @@
-#!/usr/bin/env python
-
-# import subprocess
-
-import rospy
+import rclpy
+import rclpy.node
 from std_msgs.msg import Bool, Empty, Int8
 from thymio_msgs.msg import Led
+from typing import Dict, Optional, Callable, Any
 
 LONG_PRESS = 5  # seconds
 MENU_TIMEOUT = 5
 SELECTION_TIMEOUT = 3
 TARGET_TIMEOUT = 8
 
-
-# def service_is_running(name):
-#     try:
-#         status = subprocess.check_output(["/etc/init.d/" + name, "status"])
-#         return status.find('running') >= 0
-#     except Exception as e:
-#         rospy.logerr("Service is running, got exception %s" % e)
-#         return False
-
 _shutdown_pipe = '/shutdown'
 _update_pipe = '/update'
 
 
-class UI(object):
+class UI(rclpy.node.Node):  # type: ignore
 
-    def _init_buttons(self):
-        self.long_press = rospy.get_param('~long_press_duration', LONG_PRESS)
-        self.menu_timeout = rospy.get_param('~menu_timeout', MENU_TIMEOUT)
-        self.selection_timeout = rospy.get_param('~selection_timeout', SELECTION_TIMEOUT)
-        self.target_timeout = rospy.get_param('~target_timeout', TARGET_TIMEOUT)
-        self.last_time_button_down = {}
-        self.buttons = ['left', 'center', 'right', 'forward', 'backward']
+    def _init_buttons(self) -> None:
+        self.long_press = self.declare_parameter('long_press_duration', LONG_PRESS).value
+        self.menu_timeout = self.declare_parameter('~menu_timeout', MENU_TIMEOUT).value
+        self.selection_timeout = self.declare_parameter('~selection_timeout', SELECTION_TIMEOUT).value
+        self.target_timeout = self.declare_parameter('~target_timeout', TARGET_TIMEOUT).value
+        self.last_time_button_down: Dict[str, Optional[float]] = {}
+        self.buttons = ('left', 'center', 'right', 'forward', 'backward')
         for b in self.buttons:
-            rospy.Subscriber('buttons/' + b, Bool, self.on_button(b))
+            self.create_subscription(Bool, f'buttons/{b}', self.on_button(b), 1)
 
-    def _init_menu(self):
-        self._menu = self._desired_config = self._target_config = None
-        self.config = {i: None for i in range(4)}
+    def _init_menu(self) -> None:
+        self._menu: Optional[int] = None
+        self._desired_config: Optional[int] = None
+        self._target_config: Optional[int] = None
+        self.config: Dict[int, Optional[int]] = {i: None for i in range(4)}
         self.menu_ts = self.desired_config_ts = self.target_config_ts = None
         self.config_size = {i: 0 for i in range(4)}
-
         self.target_config_pub = [
-            rospy.Publisher('config/{i}/target'.format(i=i), Int8, queue_size=1)
-            for i in range(4)]
+            self.create_publisher(Int8, f'config/c{i}/target', 1) for i in range(4)]
         for i in range(4):
-            rospy.Subscriber('config/{i}'.format(i=i), Int8, self.on_config(i))
-            rospy.Subscriber('config/{i}/size'.format(i=i), Int8, self.on_config_size(i))
+            self.create_subscription(Int8, f'config/c{i}/value', self.on_config(i), 1)
+            self.create_subscription(Int8, f'config/c{i}/size', self.on_config_size(i), 1)
 
-    def __init__(self):
+    def __init__(self) -> None:
 
-        # wait for the thymio
-
-        # rospy.wait_for_service('thymio_is_ready')
-
-        rospy.init_node('ui_node', anonymous=True)
-
+        super(UI, self).__init__('ui_node')
+        self.clock = rclpy.clock.Clock(clock_type=rclpy.clock.ClockType.ROS_TIME)
         self.should_exit = False
 
-        self.led_publisher = rospy.Publisher('led', Led, queue_size=10)
-        self.shutdown_thymio_pub = rospy.Publisher(
-            'shutdown', Empty, queue_size=1)
+        self.led_publisher = self.create_publisher(Led, 'led', 10)
+        self.shutdown_thymio_pub = self.create_publisher(Empty, 'shutdown', 1)
 
         self.beat = True
 
-        rospy.on_shutdown(self.on_shutdown)
+        # TODO(J): not yet there in ROS2
+        # rospy.on_shutdown(self.on_shutdown)
 
         self._init_menu()
         self._init_buttons()
-        rospy.Timer(rospy.Duration(1.0), self.send_beat)
+        self.create_timer(1.0, self.update)
 
-        r = rospy.Rate(1)
-        while not self.should_exit and not rospy.is_shutdown():
-            self.check_menu_timeout()
-            self.check_desired_config_timeout()
-            self.check_target_config_timeout()
-            self.check_long_press()
-            r.sleep()
-        self.on_shutdown()
+        # TODO(J) how to check ...
+        # while not self.should_exit and not rospy.is_shutdown():
+        #     ...
+        # self.on_shutdown()
+
+    def update(self) -> None:
+        self.send_beat
+        self.check_menu_timeout()
+        self.check_desired_config_timeout()
+        self.check_target_config_timeout()
+        self.check_long_press()
 
     @property
-    def menu(self):
+    def menu(self) -> Optional[int]:
         return self._menu
 
     @menu.setter
-    def menu(self, value):
+    def menu(self, value: Optional[int]) -> None:
         if value != self._menu:
             self._menu = value
             # rospy.loginfo('Select menu %s', value)
-            self.menu_ts = rospy.Time.now()
+            self.menu_ts = self.clock.now()
             if value is None:
                 self._desired_config = None
                 self._target_config = None
@@ -97,79 +85,81 @@ class UI(object):
             self.update_config_led()
 
     @property
-    def target_config(self):
+    def target_config(self) -> Optional[int]:
         return self._target_config
 
     @target_config.setter
-    def target_config(self, value):
+    def target_config(self, value: Optional[int]) -> None:
         if value != self.target_config:
             self._target_config = value
-            rospy.loginfo('Set target config to %s', value)
-            if value is not None:
+            self.get_logger().info(f'Set target config to {value}')
+            if value is not None and self.menu is not None:
                 self.target_config_pub[self.menu].publish(value)
-                self.target_config_ts = self.menu_ts = rospy.Time.now()
+                self.target_config_ts = self.menu_ts = self.clock.now()
 
     @property
-    def desired_config(self):
+    def desired_config(self) -> Optional[int]:
         return self._desired_config
 
     @desired_config.setter
-    def desired_config(self, value):
+    def desired_config(self, value: Optional[int]) -> None:
         if value != self.desired_config:
             if value is not None:
-                self.menu_ts = rospy.Time.now()
-            if value == self.config[self.menu]:
+                self.menu_ts = self.clock.now()
+            if self.menu is not None and value == self.config[self.menu]:
                 value = None
             self._desired_config = value
             # rospy.loginfo('Set selection  to %s', value)
             if value is not None:
-                self.desired_config_ts = rospy.Time.now()
+                self.desired_config_ts = self.clock.now()
             self.update_config_led()
 
-    def update_menu_led(self):
+    def update_menu_led(self) -> None:
         msg = Led(id=Led.BUTTONS, values=([0] * 8))
         if self.menu is not None:
             msg.values[self.menu % 4] = 0.5
         self.led_publisher.publish(msg)
 
-    def update_config_led(self):
+    def update_config_led(self) -> None:
         msg = Led(id=Led.CIRCLE, values=(8 * [0]))
         if self.desired_config is not None:
             msg.values[self.desired_config % 8] = 0.07
         else:
-            if self.menu is not None and self.config[self.menu] is not None:
-                msg.values[self.config[self.menu] % 8] = 1.0
+            if self.menu is not None:
+                config = self.config[self.menu]
+                if config is not None:
+                    msg.values[config % 8] = 1.0
         self.led_publisher.publish(msg)
 
-    def check_menu_timeout(self):
+    def check_menu_timeout(self) -> None:
         if self.menu is not None and self.target_config is None:
-            dt = rospy.Time.now() - self.menu_ts
-            if dt.to_sec() > self.menu_timeout:
+            dt = self.clock.now() - self.menu_ts
+            if dt.nanoseconds * 1e-9 > self.menu_timeout:
                 # rospy.loginfo('timeout menu')
                 self.menu = None
 
-    def check_desired_config_timeout(self):
+    def check_desired_config_timeout(self) -> None:
         if self.desired_config is not None and self.target_config is None:
-            dt = rospy.Time.now() - self.desired_config_ts
-            if dt.to_sec() > self.selection_timeout:
+            dt = self.clock.now() - self.desired_config_ts
+            if dt.nanoseconds * 1e-9 > self.selection_timeout:
                 # rospy.loginfo('timeout selection')
                 self.desired_config = None
 
-    def check_target_config_timeout(self):
+    def check_target_config_timeout(self) -> None:
         if self.target_config is not None:
-            if (rospy.Time.now() - self.target_config_ts).to_sec() > self.target_timeout:
+            if (self.clock.now() - self.target_config_ts).nanoseconds * 1e-9 > self.target_timeout:
                 # rospy.loginfo('timeout target')
                 self.target_config = None
 
-    def on_config(self, menu):
-        def cb(msg):
+    def on_config(self, menu: int) -> Callable[[Int8], None]:
+        def cb(msg: Int8) -> None:
             value = msg.data
             self.menu = menu
             self.set_config(menu, value)
         return cb
 
-    def on_config_size(self, menu):
-        def cb(msg):
+    def on_config_size(self, menu: int) -> Callable[[Int8], None]:
+        def cb(msg: Int8) -> None:
             value = msg.data
             # rospy.loginfo('Set config size for %s to %s', menu, value)
             self.config_size[menu] = value
@@ -180,20 +170,20 @@ class UI(object):
                 self.config[menu] = 0
         return cb
 
-    def set_config(self, menu, value):
+    def set_config(self, menu: int, value: int) -> None:
         # rospy.loginfo('Set config for %s to %s', menu, value)
         self.desired_config = self.target_config = None
         self.config[menu] = value
         if menu != self.menu:
             self.menu = menu
         else:
-            self.menu_ts = rospy.Time.now()
+            self.menu_ts = self.clock.now()
         self.update_config_led()
 
-    def on_shutdown(self):
+    def on_shutdown(self) -> None:
         self.menu = None
 
-    def send_beat(self, evt):
+    def send_beat(self) -> None:
         if self.menu is not None:
             return
         msg = Led(id=Led.BUTTONS, values=(4 * [0.0]))
@@ -202,17 +192,17 @@ class UI(object):
         self.led_publisher.publish(msg)
         self.beat = not self.beat
 
-    def shutdown_odroid(self):
+    def shutdown_odroid(self) -> None:
         with open(_shutdown_pipe, 'w') as f:
             f.write('shutdown\n')
         # subprocess.call(['shutdown', 'now'])
         # print "SHUTDOWN ODROID"
 
-    def update_odroid(self):
+    def update_odroid(self) -> None:
         with open(_update_pipe, 'w') as f:
             f.write('update\n')
 
-    def on_long_press(self, button):
+    def on_long_press(self, button: str) -> None:
         # rospy.loginfo('long press %s' % button)
         # the button has been pressed for more than LONG_PRESS seconds
         if(button == 'forward'):
@@ -234,11 +224,11 @@ class UI(object):
                     self.menu = menu
                     break
 
-    def on_button(self, button):
-        def cb(msg):
+    def on_button(self, button: str) -> Callable[[Bool], None]:
+        def cb(msg: Bool) -> None:
             if msg.data:
                 # rospy.loginfo('down %s', button)
-                self.last_time_button_down[button] = rospy.Time.now()
+                self.last_time_button_down[button] = self.clock.now()
             else:
                 # rospy.loginfo('up %s', button)
                 if self.last_time_button_down[button] is not None:
@@ -246,7 +236,7 @@ class UI(object):
                 self.last_time_button_down[button] = None
         return cb
 
-    def on_short_press(self, button):
+    def on_short_press(self, button: str) -> None:
         # rospy.loginfo('short press %s' % button)
         if(button == 'right'):
             # rospy.loginfo("L %s %s %s", self.menu, self.target_config, self.desired_config)
@@ -268,7 +258,7 @@ class UI(object):
             # change manu
             self.move_to_next_menu()
 
-    def move_to_next_menu(self):
+    def move_to_next_menu(self) -> None:
         # rospy.loginfo('Move to next menu')
         if self.menu is not None:
             for i in range(4):
@@ -278,13 +268,17 @@ class UI(object):
                     return
             self.menu = None
 
-    def check_long_press(self):
+    def check_long_press(self) -> None:
         for b in self.buttons:
             if(self.last_time_button_down.get(b, None) and
-               (rospy.Time.now() - self.last_time_button_down.get(b)).to_sec() > self.long_press):
+               (self.clock.now() - self.last_time_button_down.get(b)).nanoseconds * 1e-9 > self.long_press):
                 self.last_time_button_down[b] = None
                 self.on_long_press(b)
 
 
-if __name__ == '__main__':
+def main(args: Any = None) -> None:
+    rclpy.init(args=args)
     ui = UI()
+    rclpy.spin(ui)
+    ui.destroy_node()
+    rclpy.shutdown()

@@ -74,6 +74,7 @@
     <gazebo reference="camera_link">
       <sensor type="camera" name="head_camera">
         <update_rate>30.0</update_rate>
+        <always_on>1</always_on>
         <camera name="head_camera">
           <horizontal_fov>0.786</horizontal_fov>
           <image>
@@ -90,26 +91,31 @@
             <mean>0.0</mean>
             <stddev>0.007</stddev>
           </noise>
+          <distortion>
+             <k1>-0.003061</k1>
+             <k2>0.044691</k2>
+             <k3>0.012541</k3>
+             <p1>-0.000858</p1>
+             <p2>0</p2>
+           </distortion>
+           <!-- <lens>
+             <type>stereographic</type>
+             <scale_to_hfov>1.0</scale_to_hfov>
+             <intrinsic>
+               <fx></fx>
+               <fx></fx>
+               <fx></fx>
+             </intrinsic>
+           </lens> -->
+           <!-- <CxPrime>333.88</CxPrime>
+           <Cx>334.87</Cx>
+           <Cy>281.10</Cy> -->
         </camera>
         <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
-          <alwaysOn>true</alwaysOn>
-          <updateRate>0.0</updateRate>
-          <cameraName>camera</cameraName>
-          <imageTopicName>image_raw</imageTopicName>
-          <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-          <frameName>camera_optical_link</frameName>
-          <hackBaseline>0.0</hackBaseline>
-          <distortionK1>-0.003061</distortionK1>
-          <distortionK2>0.044691</distortionK2>
-          <distortionK3>0.012541</distortionK3>
-          <distortionT1>-0.00085</distortionT1>
-          <distortionT2>0.0</distortionT2>
-
-          <CxPrime>333.88</CxPrime>
-          <Cx>334.87</Cx>
-          <Cy>281.10</Cy>
-
-
+          <!-- This makes the plugin segfault [tested on macos] -->
+          <!-- <camera_name>camera</camera_name> -->
+          <frame_name>camera_optical_link</frame_name>
+          <hack_baseline>0.0</hack_baseline>
         </plugin>
       </sensor>
     </gazebo>
