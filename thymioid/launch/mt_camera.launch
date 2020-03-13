@@ -1,0 +1,10 @@
+<launch>
+  <arg name="image_width" default="640"/>
+  <arg name="image_height" default="480"/>
+  <arg name="name" default="$(env HOSTNAME)"/>
+  <push-ros-namespace namespace="$(var name)"/>
+  <executable cmd="v4l2-ctl --set-fmt-video=pixelformat=YUYV" name="camera_config" output="screen"/>
+  <node name="camera" pkg="v4l2_camera" exec="v4l2_camera_node" output="screen">
+    <param name="image_size" value="$(var image_width),$(var image_height)" value-sep=","/>
+  </node>
+</launch>

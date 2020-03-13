@@ -1,0 +1,22 @@
+<launch>
+  <arg name="name" default="$(env HOSTNAME '')"/>
+  <arg name="long_press_duration" default="3"/>
+  <arg name="menu_timeout" default="5"/>
+  <arg name="selection_timeout" default="3"/>
+  <arg name="target_timeout" default="8"/>
+
+  <arg name="wlans" default="$(env wlans 'drone_wifi')"/>
+
+  <push-ros-namespace namespace="$(var name)"/>
+
+  <node name="ups_ward" exec="ups_ui" pkg="thymioid" output="screen"/>
+  <node name="ui" exec="ui" pkg="thymioid" output="screen">
+    <param name="long_press_duration" value="$(var long_press_duration)"/>
+    <param name="menu_timeout" value="$(var menu_timeout)"/>
+    <param name="selection_timeout" value="$(var selection_timeout)"/>
+    <param name="target_timeout" value="$(var target_timeout)"/>
+  </node>
+  <node name="wifi_menu" exec="wifi_menu" pkg="thymioid" output="screen">
+    <param name="wlan_interfaces" value="$(var wlans)" value-sep=", "/>
+  </node>
+</launch>

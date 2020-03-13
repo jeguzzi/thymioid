@@ -47,7 +47,7 @@ class UpsWard(rclpy.node.Node):  # type: ignore
         self.get_logger().info("Ups UI ready")
 
         self.led_publishers = [
-            self.create_publisher(f'led/body/{led}', ColorRGBA, 1)
+            self.create_publisher(ColorRGBA, f'led/body/{led}', 1)
             for led in ('top', 'bottom_left', 'bottom_right')]
 
         self.battery: Optional[bool] = None
@@ -56,7 +56,7 @@ class UpsWard(rclpy.node.Node):  # type: ignore
         param = self.declare_parameter('play_alarm', False)
         self.enable_alarm = param.value
         self.playing_alarm = False
-        self.alarm_publisher = self.create_publisher('alarm', Bool, queue_size=1)
+        self.alarm_publisher = self.create_publisher(Bool, 'alarm', 1)
         self.batt_sub = self.create_subscription(Bool, 'ups/battery', self.on_battery, 1)
         self.ac_sub = self.create_subscription(Bool, 'ups/ac', self.on_ac, 1)
 

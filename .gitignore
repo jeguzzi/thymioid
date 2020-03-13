@@ -48,5 +48,6 @@ CATKIN_IGNORE
 
 thymioid/configuration/thymioTemplate.rviz.*
 
+__pycache__
 
 *.img

@@ -34,7 +34,11 @@ class WifiUI(Menu, FileSystemEventHandler):  # type: ignore
 
         self.get_logger().info(f"Loaded wlan configs {self.configurations}")
         self.size = len(self.configurations)
-        self.config = get_configuration(self.run_state, self.configurations)
+        try:
+            self.config = get_configuration(self.run_state, self.configurations)
+        except FileNotFoundError:
+            self.get_logger().error(f"Network file {self.run_state} not found. Will exit.")
+            raise FileNotFoundError
         folder = os.path.dirname(self.run_state)
         self.get_logger().info("Start observing changes in {folder}")
         observer = Observer()
@@ -55,7 +59,10 @@ class WifiUI(Menu, FileSystemEventHandler):  # type: ignore
 
 def main(args: Any = None) -> None:
     rclpy.init(args=args)
-    wifi = WifiUI(0)
+    try:
+        wifi = WifiUI(0)
+    except Exception:
+        return
     rclpy.spin(wifi)
     wifi.destroy_node()
     rclpy.shutdown()

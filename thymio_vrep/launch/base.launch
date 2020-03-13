@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <!--><param name='use_sim_time' value='true'/>
-  <node name='clock' pkg='thymio_vrep' type='clock_node.py' output="screen" required="true"/><-->
-  <node pkg="thymio_vrep" type="thymio_vrep.py" name="aseba_vrep" output="screen"/>
-  <node name="thymio" pkg="thymio_driver" type="thymio_driver_node.py" output="screen" />
-</launch>
-

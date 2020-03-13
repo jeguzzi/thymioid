@@ -1,0 +1,25 @@
+<launch>
+
+  <arg name="name" default="thymio"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="camera_is_fixed" default="true"/>
+  <arg name="camera_pitch" default="0.2618"/>
+
+  <node name="spawn_thymio" exec="spawn_entity.py" pkg="gazebo_ros" output="screen"
+    args="-entity $(var name) -topic robot_description -x $(var x) -y $(var y) -z 0"/>
+
+  <include file="$(find-pkg-share thymioid_description)/launch/model.launch.py">
+    <arg name="name" value="$(var name)"/>
+    <arg name="publish_ground_truth" value="true"/>
+    <arg name="camera_is_fixed" value="$(var camera_is_fixed)"/>
+    <arg name="camera_pitch" value="$(var camera_joint_pitch)"/>
+    <arg name="odom_rate" value="$(var odom_rate)"/>
+  </include>
+
+  <node pkg="thymioid" name="camera_pitch_controller" exec="camera_pitch_controller"
+      unless="$(var camera_is_fixed") ns="$(var name)">
+    <param name="pitch" value="$(var camera_pitch)"/>
+  </node>
+
+</launch>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<launch>
-  <arg name="demos" default="[ml]"/>
-  <arg name="name" default="$(optenv HOSTNAME)"/>
-  <node name="demo_menu" type="demo_menu.py" pkg="thymioid" output="screen" ns="$(eval arg('name') or '/')">
-    <rosparam param="demos" subst_value="True">$(arg demos)</rosparam>
-  </node>
-</launch>

@@ -1,13 +1,12 @@
 import rclpy
 import rclpy.node
+from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from sensor_msgs.msg import JointState
 from typing import List, Any
 from rcl_interfaces.msg import SetParametersResult, ParameterDescriptor, FloatingPointRange
-# def update(pub, msg):
-#     def f(event):
-#         msg.header.stamp = rospy.Time.now()
-#         pub.publish(msg)
-#     return f
+
+latching_qos = QoSProfile(depth=1,
+                          durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL)
 
 
 class PitchController(rclpy.node.Node):  # type: ignore
@@ -22,19 +21,18 @@ class PitchController(rclpy.node.Node):  # type: ignore
         joint = self.declare_parameter('joint', 'camera_body_support_joint')
         self.msg = JointState()
         self.msg.name = [joint.value]
-        self.msg.position = [pitch.value]
+        self.msg.position = [float(pitch.value)]
         self.clock = rclpy.clock.Clock(clock_type=rclpy.clock.ClockType.ROS_TIME)
         # TODO(J): add  latch=True
-        self.pub = self.create_publisher(JointState, "joint_states", 1)
+        self.pub = self.create_publisher(JointState, "joint_states", latching_qos)
         self.set_parameters_callback(self.callback)
-        # TODO(J): should I still use a timer?
-        # rospy.Timer(rospy.Duration(10), update(pub, msg))
 
     def callback(self, params: List[rclpy.Parameter]) -> SetParametersResult:
         params = [p for p in params if p.name == 'pitch']
         if params:
+            self.get_logger().info(f'Will set joint {self.msg.name} to angle {params[0].value}')
             self.msg.header.stamp = self.clock.now().to_msg()
-            self.msg.position = [params[0].value]
+            self.msg.position = [float(params[0].value)]
             self.pub.publish(self.msg)
         return SetParametersResult(successful=True)
 

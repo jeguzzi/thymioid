@@ -28,7 +28,6 @@ setup(
     entry_points={
         'console_scripts': [
             'wifi_menu = thymioid.wifi_node_pipe:main',
-            'ups = thymioid.ups_node:main',
             'ups_ui = thymioid.ups_ward_node:main',
             'ui = thymioid.ui_node:main',
             'camera_pitch_controller = thymioid.camera_pitch_controller:main',
