@@ -62,7 +62,7 @@ class UI(rclpy.node.Node):  # type: ignore
         # self.on_shutdown()
 
     def update(self) -> None:
-        self.send_beat
+        self.send_beat()
         self.check_menu_timeout()
         self.check_desired_config_timeout()
         self.check_target_config_timeout()
