@@ -94,7 +94,7 @@ class UI(rclpy.node.Node):  # type: ignore
             self._target_config = value
             self.get_logger().info(f'Set target config to {value}')
             if value is not None and self.menu is not None:
-                self.target_config_pub[self.menu].publish(value)
+                self.target_config_pub[self.menu].publish(Int8(data=value))
                 self.target_config_ts = self.menu_ts = self.clock.now()
 
     @property
@@ -203,7 +203,7 @@ class UI(rclpy.node.Node):  # type: ignore
             f.write('update\n')
 
     def on_long_press(self, button: str) -> None:
-        # rospy.loginfo('long press %s' % button)
+        self.get_logger().info(f'Long press {button}')
         # the button has been pressed for more than LONG_PRESS seconds
         if(button == 'forward'):
             # exit
