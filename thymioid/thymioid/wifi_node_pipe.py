@@ -40,7 +40,7 @@ class WifiUI(Menu, FileSystemEventHandler):  # type: ignore
             self.get_logger().error(f"Network file {self.run_state} not found. Will exit.")
             raise FileNotFoundError
         folder = os.path.dirname(self.run_state)
-        self.get_logger().info("Start observing changes in {folder}")
+        self.get_logger().info(f"Start observing changes in {folder}")
         observer = Observer()
         observer.schedule(self, folder, recursive=True)
         observer.start()
