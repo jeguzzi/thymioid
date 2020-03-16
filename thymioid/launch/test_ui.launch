@@ -1,0 +1,28 @@
+<launch>
+  <arg name="name" default="''"/>
+  <arg name="long_press_duration" default="3"/>
+  <arg name="menu_timeout" default="5"/>
+  <arg name="selection_timeout" default="3"/>
+  <arg name="target_timeout" default="8"/>
+
+  <push-ros-namespace namespace="$(var name)"/>
+
+  <node name="ui" exec="ui" pkg="thymioid" output="screen" args="--ros-args --log-level INFO">
+    <param name="long_press_duration" value="$(var long_press_duration)"/>
+    <param name="menu_timeout" value="$(var menu_timeout)"/>
+    <param name="selection_timeout" value="$(var selection_timeout)"/>
+    <param name="target_timeout" value="$(var target_timeout)"/>
+  </node>
+  <node name="menu0" exec="simple_menu" pkg="thymioid" output="screen" args="--ros-args --log-level INFO">
+    <param name="index" value="0"/>
+    <param name="size" value="4"/>
+  </node>
+  <node name="menu1" exec="simple_menu" pkg="thymioid" output="screen" args="--ros-args --log-level INFO">
+    <param name="index" value="1"/>
+    <param name="size" value="2"/>
+  </node>
+  <node name="menu2" exec="simple_menu" pkg="thymioid" output="screen" args="--ros-args --log-level INFO">
+    <param name="index" value="2"/>
+    <param name="size" value="6"/>
+  </node>
+</launch>

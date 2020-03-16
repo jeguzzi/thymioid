@@ -3,6 +3,8 @@ import rclpy.node
 from std_msgs.msg import Bool, Empty, Int8
 from thymio_msgs.msg import Led
 from typing import Dict, Optional, Callable, Any
+from .menu import latching_qos
+
 
 LONG_PRESS = 5  # seconds
 MENU_TIMEOUT = 5
@@ -33,10 +35,10 @@ class UI(rclpy.node.Node):  # type: ignore
         self.menu_ts = self.desired_config_ts = self.target_config_ts = None
         self.config_size = {i: 0 for i in range(4)}
         self.target_config_pub = [
-            self.create_publisher(Int8, f'config/c{i}/target', 1) for i in range(4)]
+            self.create_publisher(Int8, f'menu_{i}/target', 1) for i in range(4)]
         for i in range(4):
-            self.create_subscription(Int8, f'config/c{i}/value', self.on_config(i), 1)
-            self.create_subscription(Int8, f'config/c{i}/size', self.on_config_size(i), 1)
+            self.create_subscription(Int8, f'menu_{i}/value', self.on_config(i), latching_qos)
+            self.create_subscription(Int8, f'menu_{i}/size', self.on_config_size(i), latching_qos)
 
     def __init__(self) -> None:
 
@@ -75,6 +77,7 @@ class UI(rclpy.node.Node):  # type: ignore
     @menu.setter
     def menu(self, value: Optional[int]) -> None:
         if value != self._menu:
+            self.get_logger().info(f'Select menu {value}')
             self._menu = value
             # rospy.loginfo('Select menu %s', value)
             self.menu_ts = self.clock.now()
@@ -118,6 +121,7 @@ class UI(rclpy.node.Node):  # type: ignore
         msg = Led(id=Led.BUTTONS, values=([0] * 8))
         if self.menu is not None:
             msg.values[self.menu % 4] = 0.5
+        self.get_logger().debug(f'update_menu_led: send led_publisher {msg}')
         self.led_publisher.publish(msg)
 
     def update_config_led(self) -> None:
@@ -203,7 +207,7 @@ class UI(rclpy.node.Node):  # type: ignore
             f.write('update\n')
 
     def on_long_press(self, button: str) -> None:
-        self.get_logger().info(f'Long press {button}')
+        self.get_logger().debug(f'Long press {button}')
         # the button has been pressed for more than LONG_PRESS seconds
         if(button == 'forward'):
             # exit
@@ -255,11 +259,11 @@ class UI(rclpy.node.Node):  # type: ignore
                 self.target_config = self.desired_config
 
         if(button == 'left'):
-            # change manu
+            # change menu
             self.move_to_next_menu()
 
     def move_to_next_menu(self) -> None:
-        # rospy.loginfo('Move to next menu')
+        self.get_logger().debug(f'Move to next menu')
         if self.menu is not None:
             for i in range(4):
                 menu = (self.menu + i + 1) % 4

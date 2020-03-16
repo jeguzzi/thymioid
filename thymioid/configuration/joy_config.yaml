@@ -1,12 +1,19 @@
 # Logitech F710 wireless controller
 # Deadman (enable) button: Right Trigger
 # D<>X button (located on the back panel) must be set to D
+# Issues:
+# 1) Currently it is testing for any button, not all
+# https://github.com/ros-teleop/teleop_tools/blob/dashing-devel/joy_teleop/joy_teleop/joy_teleop.py#L180
+# like it was before
+# https://github.com/ros-teleop/teleop_tools/blob/kinetic-devel/joy_teleop/scripts/joy_teleop.py#L137
+# 2) messsage: {} for Empty is not working. It is parsing but not publishing.
 /**:
   ros__parameters:
     piloting:
       type: topic
       interface_type: "geometry_msgs/msg/Twist"
       topic_name: cmd_vel
+      deadman_buttons: [7]  # RT
       axis_mappings:
         linear-x:
           axis: 3  # Right thumb stick (up/down)
@@ -38,8 +45,8 @@
       type: topic
       interface_type: "std_msgs/msg/Empty"
       topic_name: led/gesture/alive
-      deadman_buttons: [7,1]  # RT + A
       message_value: {}
+      deadman_buttons: [7,1]  # RT + A
     led_blink:
       type: topic
       interface_type: "std_msgs/msg/Float32"
@@ -54,8 +61,8 @@
       type: topic
       interface_type: "std_msgs/msg/Empty"
       topic_name: led/gesture/off
-      deadman_buttons: [7,9]  # RT
-      message_value: {}
+      buttons: [7,9]  # RT
+      message_value: null
     body_led_off:
       type: topic
       interface_type: "std_msgs/msg/ColorRGBA"
@@ -120,7 +127,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [0]
+      deadman_buttons: [6,7,0]
       message_value:
         sound:
           value: 0
@@ -128,7 +135,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [1]
+      deadman_buttons: [6,7,1]
       message_value:
         sound:
           value: 1
@@ -136,7 +143,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [2]
+      deadman_buttons: [6,7,2]
       message_value:
         sound:
           value: 2
@@ -144,7 +151,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [3]
+      deadman_buttons: [6,7,3]
       message_value:
         sound:
           value: 3
@@ -152,7 +159,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [4]
+      deadman_buttons: [6,7,4]
       message_value:
         sound:
           value: 4
@@ -160,7 +167,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [5]
+      deadman_buttons: [6,7,5]
       message_value:
         sound:
           value: 5
@@ -168,7 +175,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [8]
+      deadman_buttons: [6,7,8]
       message_value:
         sound:
           value: 6
@@ -176,7 +183,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [9]
+      deadman_buttons: [6,7,9]
       message_value:
         sound:
           value: 7
@@ -184,7 +191,7 @@
       type: topic
       interface_type: "thymio_msgs/msg/SystemSound"
       topic_name: sound/play/system
-      deadman_buttons: [10]
+      deadman_buttons: [6,7,10]
       message_value:
         sound:
           value: -1

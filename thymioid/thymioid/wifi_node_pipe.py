@@ -23,10 +23,10 @@ def get_configuration(run_path: str, configurations: str) -> int:
 
 class WifiUI(Menu, FileSystemEventHandler):  # type: ignore
 
-    def __init__(self, index: int, interface: str = 'wlan0') -> None:
+    def __init__(self, interface: str = 'wlan0') -> None:
         self.interface = interface
         self.run_state = f'/run/network/ifstate.{interface}'
-        super(WifiUI, self).__init__(name='wifi_ui', index=index)
+        super(WifiUI, self).__init__(name='wifi_ui')
 
         # TODO(J): Maybe should describe it?
         interfaces_param = self.declare_parameter('wlan_interfaces', [])
@@ -60,7 +60,7 @@ class WifiUI(Menu, FileSystemEventHandler):  # type: ignore
 def main(args: Any = None) -> None:
     rclpy.init(args=args)
     try:
-        wifi = WifiUI(0)
+        wifi = WifiUI()
     except Exception:
         return
     rclpy.spin(wifi)

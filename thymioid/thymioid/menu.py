@@ -12,17 +12,16 @@ latching_qos = QoSProfile(depth=1,
 class Menu(rclpy.node.Node, ABC):  # type: ignore
     """docstring for Menu."""
 
-    def __init__(self, name: str, index: int, size: Optional[int] = None) -> None:
+    def __init__(self, name: str) -> None:
         super(Menu, self).__init__(name)
-        self.get_logger().info(f"Init Menu at index {index}.")
+        self.index = self.declare_parameter('index', 0).value
+        self.get_logger().info(f"Init Menu at index {self.index}.")
         self.create_subscription
         self._config: Optional[int] = None
-        self._size = None
-        self.index = index
-        self.pub_value = self.create_publisher(Int8, f'config/c{index}/value', latching_qos)
-        self.pub_size = self.create_publisher(Int8, f'config/c{index}/size', latching_qos)
-        self.create_subscription(Int8, f'config/c{index}/target', self.on_target, 1)
-        self.size = size
+        self._size: Optional[int] = None
+        self.pub_value = self.create_publisher(Int8, f'menu_{self.index}/value', latching_qos)
+        self.pub_size = self.create_publisher(Int8, f'menu_{self.index}/size', latching_qos)
+        self.create_subscription(Int8, f'menu_{self.index}/target', self.on_target, 1)
 
     def on_target(self, msg: Int8) -> None:
         value = msg.data
@@ -37,7 +36,7 @@ class Menu(rclpy.node.Node, ABC):  # type: ignore
     @config.setter
     def config(self, value: int) -> None:
         if value != self._config and self.size and value < self.size:
-            self.get_logger().info(f"Set Menu {self.index} config to {value}.")
+            self.get_logger().info(f"Set menu {self.index} config to {value}.")
             self._config = value
             self.pub_value.publish(Int8(data=value))
 
@@ -48,7 +47,7 @@ class Menu(rclpy.node.Node, ABC):  # type: ignore
     @size.setter
     def size(self, value: int) -> None:
         if value != self._size and value > 0:
-            self.get_logger().info(f"Set Menu {self.index} size to {value}.")
+            self.get_logger().info(f"Set menu {self.index} size to {value}.")
             self._size = value
             self.pub_size.publish(Int8(data=self._size))
 

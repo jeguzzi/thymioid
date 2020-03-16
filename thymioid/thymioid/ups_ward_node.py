@@ -1,11 +1,12 @@
 import enum
-from time import sleep
+# from time import sleep
 from typing import Any, Optional
 
 import rclpy
 import rclpy.node
 import std_srvs.srv
 from std_msgs.msg import Bool, ColorRGBA
+from .menu import Menu
 
 
 class UpsState(enum.Enum):
@@ -37,13 +38,12 @@ ups_color = {
 }
 
 
-class UpsWard(rclpy.node.Node):  # type: ignore
+class UpsWard(Menu):
 
     def __init__(self) -> None:
-        super(UpsWard, self).__init__('ups_ui')
+        super(UpsWard, self).__init__(name='ups_ui')
         # wait for the thymio
         self.create_client(std_srvs.srv.Empty, 'thymio_is_ready').wait_for_service()
-        sleep(2.0)
         self.get_logger().info("Ups UI ready")
 
         self.led_publishers = [
@@ -59,6 +59,7 @@ class UpsWard(rclpy.node.Node):  # type: ignore
         self.alarm_publisher = self.create_publisher(Bool, 'alarm', 1)
         self.batt_sub = self.create_subscription(Bool, 'ups/battery', self.on_battery, 1)
         self.ac_sub = self.create_subscription(Bool, 'ups/ac', self.on_ac, 1)
+        self.config = 1
 
         # TODO(J): [still] missing in ROS2
         # rospy.on_shutdown(self.on_shutdown)
@@ -74,11 +75,16 @@ class UpsWard(rclpy.node.Node):  # type: ignore
     @state.setter
     def state(self, value: UpsState) -> None:
         if self._state != value:
-            if value == UpsState.RESERVE and self.enable_alarm:
-                self.start_alarm()
-            if value != UpsState.RESERVE and self.playing_alarm:
-                self.stop_alarm()
-            self.set_color(ups_color[value])
+            self._state = value
+            if self.config:
+                self.publish_state()
+
+    def publish_state(self) -> None:
+        if self.state == UpsState.RESERVE and self.enable_alarm:
+            self.start_alarm()
+        if self.state != UpsState.RESERVE and self.playing_alarm:
+            self.stop_alarm()
+        self.set_color(ups_color[self.state])
 
     def on_battery(self, msg: Bool) -> None:
         self.battery = msg.data
@@ -100,6 +106,13 @@ class UpsWard(rclpy.node.Node):  # type: ignore
     def set_color(self, color: ColorRGBA) -> None:
         for p in self.led_publishers:
             p.publish(color)
+
+    def set_target_config(self, value: int) -> None:
+        if self.config == 0 and value == 1:
+            self.publish_state()
+        if self.config == 1 and value == 0:
+            self.set_color(_color())
+        self.config = value
 
 
 def main(args: Any = None) -> None:
