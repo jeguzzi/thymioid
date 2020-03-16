@@ -59,6 +59,7 @@ class UpsWard(Menu):
         self.alarm_publisher = self.create_publisher(Bool, 'alarm', 1)
         self.batt_sub = self.create_subscription(Bool, 'ups/battery', self.on_battery, 1)
         self.ac_sub = self.create_subscription(Bool, 'ups/ac', self.on_ac, 1)
+        self.size = 2
         self.config = 1
 
         # TODO(J): [still] missing in ROS2
