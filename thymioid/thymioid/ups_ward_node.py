@@ -43,7 +43,7 @@ class UpsWard(Menu):
     def __init__(self) -> None:
         super(UpsWard, self).__init__(name='ups_ui')
         # wait for the thymio
-        self.create_client(std_srvs.srv.Empty, 'thymio_is_ready').wait_for_service()
+        self.create_client(std_srvs.srv.Empty, 'is_ready').wait_for_service()
         self.get_logger().info("Ups UI ready")
 
         self.led_publishers = [
