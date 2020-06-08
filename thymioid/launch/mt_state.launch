@@ -2,12 +2,14 @@
   <arg name="name" default="$(env HOSTNAME '')"/>
   <arg name="camera_is_fixed" default="$(env CAMERA_IS_FIXED 1)"/>
   <arg name="camera_pitch" default="$(env CAMERA_PITCH 0.2618)"/>
-  <arg name="odom_max_rate" default="$(env ODOM_MAX_RATE 20)"/>
+  <!-- <arg name="odom_max_rate" default="$(env ODOM_MAX_RATE 20)"/> -->
+
+  <let name="odom_rate" value="20"/> -->
 
   <let name="camera_joint_pitch"
     value="$(eval '$(var camera_pitch) if $(var camera_is_fixed) else 0')"/>
-  <let name="odom_rate"
-    value="$(eval '$(var odom_max_rate) if $(var odom_max_rate) > 0 else 20.0')"/>
+  <!-- <let name="odom_rate"
+    value="$(eval '$(var odom_max_rate) if $(var odom_max_rate) > 0 else 20.0')"/> -->
 
   <push-ros-namespace namespace="$(var name)"/>
 
