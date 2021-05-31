@@ -25,10 +25,11 @@ def update(pub, msg):
 def main():
     rospy.init_node("camera_pitch_controller")
     # ns = rospy.get_namespace()
+    tf_prefix = rospy.get_param('~tf_prefix', '')
     joint = rospy.get_param('~joint', 'camera_body_support_joint')
     pub = rospy.Publisher("joint_states", JointState, queue_size=1, latch=True)
     msg = JointState()
-    msg.name = [joint]
+    msg.name = [tf_prefix+joint]
     msg.position = [0]
 
     rospy.Timer(rospy.Duration(10), update(pub, msg))

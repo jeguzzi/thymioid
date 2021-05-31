@@ -5,9 +5,9 @@
   <xacro:arg name="camera_pitch" default="0"/>
   <xacro:arg name="camera_is_on" default="true"/>
 
-  <xacro:macro name="web_camera" params="camera_joint_type camera_pitch camera_is_on">
+  <xacro:macro name="web_camera" params="camera_joint_type camera_pitch camera_is_on tf_prefix:=''">
 
-    <link name="camera_support_link">
+    <link name="${tf_prefix}camera_support_link">
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.01"/>
@@ -21,7 +21,7 @@
       </visual>
     </link>
 
-    <link name="camera_body_link">
+    <link name="${tf_prefix}camera_body_link">
       <inertial>
         <origin xyz="0.008 0 0"/>
         <mass value="0.02"/>
@@ -39,19 +39,19 @@
       </visual>
     </link>
 
-    <link name="camera_link"/>
-    <link name="camera_optical_link"/>
+    <link name="${tf_prefix}camera_link"/>
+    <link name="${tf_prefix}camera_optical_link"/>
 
-    <joint name="ups_camera_joint" type="fixed">
+    <joint name="${tf_prefix}ups_camera_joint" type="fixed">
       <origin xyz="0.0047 -0.032 0.044" rpy="0 0 0"/>
-      <parent link="ups_link"/>
-      <child link="camera_support_link"/>
+      <parent link="${tf_prefix}ups_link"/>
+      <child link="${tf_prefix}camera_support_link"/>
     </joint>
 
-    <joint name="camera_body_support_joint" type="$(arg camera_joint_type)">
+    <joint name="${tf_prefix}camera_body_support_joint" type="$(arg camera_joint_type)">
       <origin xyz="0.0095 0 -0.0051" rpy="0 $(arg camera_pitch) 0"/>
-      <parent link="camera_support_link"/>
-      <child link="camera_body_link"/>
+      <parent link="${tf_prefix}camera_support_link"/>
+      <child link="${tf_prefix}camera_body_link"/>
       <axis xyz="0 1 0"/>
       <limit lower="-0.35" upper="1.31" effort="1e-9" velocity="1e-9"/>
       <dynamics friction="1e6"/>
@@ -60,20 +60,20 @@
 
     <!-- http://www.ros.org/reps/rep-0103.html -->
 
-    <joint name="camera_frame_joint" type="fixed">
+    <joint name="${tf_prefix}camera_frame_joint" type="fixed">
       <origin xyz="0.01 0 0"/>
-      <parent link="camera_body_link"/>
-      <child link="camera_link"/>
+      <parent link="${tf_prefix}camera_body_link"/>
+      <child link="${tf_prefix}camera_link"/>
     </joint>
 
-    <joint name="camera_optical_joint" type="fixed">
+    <joint name="${tf_prefix}camera_optical_joint" type="fixed">
       <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-      <parent link="camera_link"/>
-      <child link="camera_optical_link"/>
+      <parent link="${tf_prefix}camera_link"/>
+      <child link="${tf_prefix}camera_optical_link"/>
     </joint>
 
     <xacro:if value="$(arg camera_is_on)">
-      <gazebo reference="camera_link">
+      <gazebo reference="${tf_prefix}camera_link">
         <sensor type="camera" name="head_camera">
           <update_rate>30.0</update_rate>
           <camera name="head_camera">
@@ -99,7 +99,7 @@
             <cameraName>camera</cameraName>
             <imageTopicName>image_raw</imageTopicName>
             <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-            <frameName>camera_optical_link</frameName>
+            <frameName>${tf_prefix}camera_optical_link</frameName>
             <hackBaseline>0.0</hackBaseline>
             <distortionK1>-0.003061</distortionK1>
             <distortionK2>0.044691</distortionK2>

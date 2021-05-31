@@ -7,16 +7,17 @@
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="gui" value="$(arg gui)"/>
+    <arg name="verbose" value="true"/>
     <arg name="headless" value="$(eval not arg('gui'))"/>
-    <arg name="paused" value="true"/>
+    <arg name="paused" value="false"/>
     <!-- <arg name="world_name" value="worlds/empty_world"/> -->
   </include>
 
   <include file="$(find thymioid_description)/launch/gazebo_bringup.launch">
     <arg name="name" value="thymioX"/>
     <arg name="pose" value="-x 0 -y 0 -z 0"/>
-    <arg name="camera_is_fixed" value="true"/>
-    <arg name="camera_is_on" value="false"/>
+    <arg name="camera_is_fixed" value="false"/>
+    <arg name="camera_is_on" value="true"/>
     <arg name="publish_ground_truth" value="true"/>
     <arg name="left_wheel_friction" default="1"/>
     <arg name="right_wheel_friction" default="1"/>

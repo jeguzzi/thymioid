@@ -6,10 +6,18 @@
   <xacro:include filename="$(find thymioid_description)/urdf/camera.urdf.xacro"/>
 
   <xacro:arg name="power_pack" default="true"/>
+  <xacro:arg name="name" default=""/>
+  <xacro:property name="_name" value="$(arg name)"/>
+  <xacro:if value="${_name != ''}">
+    <xacro:property name="tf_prefix" value="${_name}/"/>
+  </xacro:if>
+  <xacro:if value="${_name == ''}">
+    <xacro:property name="tf_prefix" value=""/>
+  </xacro:if>
 
   <xacro:thymio/>
 
-  <link name="chassis_link">
+  <link name="${tf_prefix}chassis_link">
     <inertial>
       <origin xyz="0 0 0"/>
       <mass value="0.01"/>
@@ -27,13 +35,13 @@
     </visual>
   </link>
 
-  <joint name="base_chassis_joint" type="fixed">
+  <joint name="${tf_prefix}base_chassis_joint" type="fixed">
     <origin xyz="0.0081 0 0.053" rpy="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="chassis_link"/>
+    <parent link="${tf_prefix}base_link"/>
+    <child link="${tf_prefix}chassis_link"/>
   </joint>
 
-  <link name="spacers_link">
+  <link name="${tf_prefix}spacers_link">
     <inertial>
       <origin xyz="0 0 0"/>
       <mass value="1e-3"/>
@@ -51,15 +59,15 @@
     </visual>
   </link>
 
-  <joint name="chassis_spacers_joint" type="fixed">
+  <joint name="${tf_prefix}chassis_spacers_joint" type="fixed">
     <origin xyz="-0.016 0.041 0.0344" rpy="0 0 0"/>
-    <parent link="chassis_link"/>
-    <child link="spacers_link"/>
+    <parent link="${tf_prefix}chassis_link"/>
+    <child link="${tf_prefix}spacers_link"/>
   </joint>
 
   <xacro:if value="$(arg power_pack)">
 
-    <link name="power_pack_link">
+    <link name="${tf_prefix}power_pack_link">
       <inertial>
         <origin xyz="0 0 0"/>
         <mass value="0.120"/>
@@ -77,15 +85,15 @@
       </visual>
     </link>
 
-    <joint name="base_power_pack_joint" type="fixed">
+    <joint name="${tf_prefix}base_power_pack_joint" type="fixed">
       <origin xyz="0 0 0.0143"/>
-      <parent link="chassis_link"/>
-      <child link="power_pack_link"/>
+      <parent link="${tf_prefix}chassis_link"/>
+      <child link="${tf_prefix}power_pack_link"/>
     </joint>
 
   </xacro:if>
 
-  <link name="ups_link">
+  <link name="${tf_prefix}ups_link">
     <inertial>
       <origin xyz="0.004 -0.03 0.024"/>
       <mass value="0.04"/>
@@ -103,13 +111,13 @@
     </visual>
   </link>
 
-  <joint name="spacers_ups_joint" type="fixed">
+  <joint name="${tf_prefix}spacers_ups_joint" type="fixed">
     <origin xyz="0.031 0 0.0078" rpy="0 0 0"/>
-    <parent link="spacers_link"/>
-    <child link="ups_link"/>
+    <parent link="${tf_prefix}spacers_link"/>
+    <child link="${tf_prefix}ups_link"/>
   </joint>
 
-  <link name="odroid_link">
+  <link name="${tf_prefix}odroid_link">
     <inertial>
       <origin xyz="0.006 -0.045 0.022"/>
       <mass value="0.05"/>
@@ -127,13 +135,13 @@
     </visual>
   </link>
 
-  <joint name="spacers_odroid_joint" type="fixed">
+  <joint name="${tf_prefix}spacers_odroid_joint" type="fixed">
     <origin xyz="0.01 0 0 " rpy="0 0 0"/>
-    <parent link="spacers_link"/>
-    <child link="odroid_link"/>
+    <parent link="${tf_prefix}spacers_link"/>
+    <child link="${tf_prefix}odroid_link"/>
   </joint>
 
-  <xacro:web_camera camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"
+  <xacro:web_camera tf_prefix="${tf_prefix}" camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"
     camera_is_on="$(arg camera_is_on)"/>
 
 

@@ -19,12 +19,16 @@
   <arg name="odom_max_rate" default="20.0"/>
   <arg name="camera_is_on" default="true"/>
 
+  <arg name="tf_prefix" value="$(eval arg('name') + '/' or '')"/>
+
   <group unless="$(arg camera_is_fixed)" ns="$(eval arg('name') or '/')">
     <node pkg="thymioid" name="camera_pitch_controller" type="camera_pitch_controller.py" output="screen">
       <param name="pitch" value="$(arg camera_pitch)"/>
+      <param name="tf_prefix" value="$(arg tf_prefix)"/>
     </node>
     <node pkg="thymioid" name="gazebo_camera_pitch_controller" type="gazebo_camera_pitch_controller.py" output="screen">
       <param name="name" value="$(arg name)"/>
+      <param name="tf_prefix" value="$(arg tf_prefix)"/>
     </node>
   </group>
 
@@ -46,8 +50,10 @@
     <arg name="body_kp" value="$(arg body_kp)"/>
   </include>
 
+  <arg name="model" value="$(eval arg('name') or 'thymioid')"/>
+
   <!-- See https://github.com/ros-simulation/gazebo_ros_pkgs/blob/kinetic-devel/gazebo_ros/scripts/spawn_model -->
 
-  <node ns="$(eval arg('name') or '/')" name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-package_to_model true -param robot_description -urdf -model $(arg name) $(arg pose)"/>
+  <node ns="$(eval arg('name') or '/')" name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-package_to_model -param robot_description -urdf -model $(arg model) $(arg pose)"/>
 
 </launch>
