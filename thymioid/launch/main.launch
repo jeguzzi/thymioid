@@ -1,0 +1,68 @@
+<launch>
+
+  <arg name="axis_length" default="0.0935"/>
+  <arg name="odom_max_rate" default="-1"/>
+  <arg name="single" default="True"/>
+  <arg name="name" default=""/>
+  <arg name="simulation" default="False"/>
+  <arg name="simulation_has_reduced_api" default="True"/>
+  <let name="reduced_api" value="$(eval '$(var simulation) and $(var simulation_has_reduced_api)')"/>
+  <let name="driver" value="thymio_driver" if="$(var single)"/>
+  <let name="driver" value="multi_thymio_driver" unless="$(var single)"/>
+  <let name="ROS_HOME" value="$(env ROS_HOME $(env HOME $(env HOMEPATH ''))/.ros)"/>
+  <arg name="calibration_file" default="$(var ROS_HOME)/thymio_calibration.yaml"/>
+  <arg name="device" default=""/>
+  <arg name="port" default="44444"/>
+  <arg name="emit_motor" default="1"/>
+  <arg name="emit_buttons" default="0"/>
+  <arg name="emit_acc" default="1"/>
+  <arg name="emit_ground_raw" default="0"/>
+  <arg name="emit_proximity" default="1"/>
+  <arg name="enable_prox_comm" default="1"/>
+  <arg name="motor_deadband" default="10"/>
+  <arg name="motor_period" default="5"/>
+  <arg name="acc_period" default="2"/>
+  <arg name="buttons_period" default="5"/>
+  <arg name="model" default="True"/>
+  <arg name="highest_acceptable_protocol_version" default="100"/>
+  <let name="launch_model" value="$(eval '$(var model) and $(var single)')"/>
+  <arg name="camera_is_fixed" default="False"/>
+  <arg name="camera_pitch" default="0.0"/>
+
+  <push-ros-namespace namespace="$(var name)" if="$(var single)"/>
+
+  <include file="$(find-pkg-share thymio_driver)/launch/asebaros.launch">
+    <arg name="single" value="$(var single)"/>
+    <arg name="set_id_variable" value="$(var simulation)"/>
+    <arg name="reduced_api" value="$(var reduced_api)"/>
+    <arg name="device" value="$(var device)"/>
+    <arg name="port" value="$(var port)"/>
+    <arg name="emit_motor" value="$(var emit_motor)"/>
+    <arg name="emit_buttons" value="$(var emit_buttons)"/>
+    <arg name="emit_acc" value="$(var emit_acc)"/>
+    <arg name="emit_ground_raw" value="$(var emit_ground_raw)"/>
+    <arg name="emit_proximity" value="$(var emit_proximity)"/>
+    <arg name="enable_prox_comm" value="$(var enable_prox_comm)"/>
+    <arg name="motor_deadband" value="$(var motor_deadband)"/>
+    <arg name="motor_period" value="$(var motor_period)"/>
+    <arg name="acc_period" value="$(var acc_period)"/>
+    <arg name="buttons_period" value="$(var buttons_period)"/>
+    <arg name="highest_acceptable_protocol_version" value="$(var highest_acceptable_protocol_version)"/>
+  </include>
+
+  <node pkg="thymio_driver" exec="$(var driver)" output="screen" args="--ros-args --log-level info">
+    <param name="axis_length" value="$(var axis_length)"/>
+    <param name="odom_max_rate" value="$(var odom_max_rate)"/>
+    <param name="calibration_file" value="$(var calibration_file)"/>
+    <param name="tf_prefix" value="$(var name)"/>
+    <param name="launch_model" value="thymioid_description model.launch.py"/>
+    <param name="simulation" value="$(var simulation)"/>
+  </node>
+
+  <include file="$(find-pkg-share thymioid_description)/launch/model.launch.py" if="$(var launch_model)">
+    <arg name="name" value="$(var name)"/>
+    <arg name="camera_is_fixed" value="$(var camera_is_fixed)"/>
+    <arg name="camera_pitch" value="$(var camera_pitch)"/>
+  </include>
+
+</launch>

@@ -25,7 +25,7 @@ class PitchController(rclpy.node.Node):  # type: ignore
         self.clock = rclpy.clock.Clock(clock_type=rclpy.clock.ClockType.ROS_TIME)
         # TODO(J): add  latch=True
         self.pub = self.create_publisher(JointState, "joint_states", latching_qos)
-        self.set_parameters_callback(self.callback)
+        self.add_on_set_parameters_callback(self.callback)
 
     def callback(self, params: List[rclpy.Parameter]) -> SetParametersResult:
         params = [p for p in params if p.name == 'pitch']

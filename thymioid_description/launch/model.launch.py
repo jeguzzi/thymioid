@@ -14,7 +14,7 @@ def urdf(name: str = '', camera_pitch: float = 0.2618, camera_is_fixed: bool = T
          proximity_fov: float = 0.3, publish_ground_truth: bool = False,
          ground_truth_frame_id: str = '/world', ground_truth_frame_rate: float = 30.0,
          odom_rate: float = 20.0) -> str:
-    camera_joint_type = 'fixed' if camera_is_fixed in ('1', 'True', 'true') else 'revolute'
+    camera_joint_type = 'fixed' if camera_is_fixed in ('1', 'True', 'true', True) else 'revolute'
     urdf_xacro = os.path.join(get_package_share_directory('thymioid_description'),
                               'urdf', 'thymioid.urdf.xacro')
     xacro_keys = ([k for k, _ in urdf.__annotations__.items()
@@ -34,12 +34,12 @@ def robot_state_publisher(context: LaunchContext,
                           ) -> List[Node]:
     kwargs = {k: perform_substitutions(context, [v]) for k, v in substitutions.items()}
     params = {'robot_description': urdf(**kwargs)}
-    with open('test.urdf', 'w+') as f:
-        f.write(params['robot_description'])
+    # with open('./mighty_thymio.urdf', 'w+') as f:
+    #     f.write(params['robot_description'])
     node = Node(
         package='robot_state_publisher',
-        node_executable='robot_state_publisher',
-        node_name='robot_state_publisher',
+        executable='robot_state_publisher',
+        name='robot_state_publisher',
         parameters=[params], output='screen')
     return [node]
 

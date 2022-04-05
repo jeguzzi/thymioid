@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#xacro">
 
-  <xacro:macro name="web_camera" params="tf_prefix='' camera_joint_type='fixed' camera_pitch=0">
+  <xacro:macro name="web_camera" params="ns='' tf_prefix='' camera_joint_type='fixed' camera_pitch=0">
 
     <link name="${tf_prefix}camera_support_link">
       <inertial>
@@ -113,6 +113,7 @@
           <!-- <camera_name>camera</camera_name> -->
           <frame_name>${tf_prefix}camera_optical_link</frame_name>
           <hack_baseline>0.0</hack_baseline>
+          <namespace>${ns}</namespace>
         </plugin>
       </sensor>
     </gazebo>

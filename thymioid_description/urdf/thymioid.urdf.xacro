@@ -139,6 +139,6 @@
     <child link="${tf_prefix}odroid_link"/>
   </joint>
 
-  <xacro:web_camera tf_prefix="${tf_prefix}" camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"/>
+  <xacro:web_camera ns="${_name}" tf_prefix="${tf_prefix}" camera_joint_type="$(arg camera_joint_type)" camera_pitch="$(arg camera_pitch)"/>
 
 </robot>
