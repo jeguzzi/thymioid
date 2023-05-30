@@ -6,7 +6,7 @@ from typing import Optional
 from abc import ABC, abstractmethod
 
 latching_qos = QoSProfile(depth=1,
-                          durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL)
+                          durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
 
 
 class Menu(rclpy.node.Node, ABC):  # type: ignore

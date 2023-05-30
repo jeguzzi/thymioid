@@ -6,7 +6,7 @@ from typing import List, Any
 from rcl_interfaces.msg import SetParametersResult, ParameterDescriptor, FloatingPointRange
 
 latching_qos = QoSProfile(depth=1,
-                          durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL)
+                          durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
 
 
 class PitchController(rclpy.node.Node):  # type: ignore
